@@ -49,6 +49,7 @@ app.use(
       if (
         !origin ||
         allowedOrigins.includes(origin) ||
+        origin.includes("vercel.app") ||
         /^http:\/\/localhost:\d+$/.test(origin) ||
         process.env.NODE_ENV !== "production"
       ) {
