@@ -1,0 +1,408 @@
+{
+  "info": {
+    "name": "PixelForge Portfolio API Collection",
+    "_postman_id": "pixelforge-api-collection-2026",
+    "description": "Complete Postman Collection with automated test scripts matched to PixelForge backend JSON response schemas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "created_project_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. System Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Service is online', function () { var jsonData = pm.response.json(); pm.expect(jsonData.status).to.eql('online'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "health"]
+        }
+      }
+    },
+    {
+      "name": "2. Auth - Register Admin User (Signup)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created or 400 Exists', function () { pm.expect(pm.response.code).to.be.oneOf([201, 400]); });",
+              "pm.test('Response has success flag', function () { var jsonData = pm.response.json(); pm.expect(jsonData).to.have.property('success'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Sunny Kumar\",\n  \"email\": \"sunnykumar6207058974@gmail.com\",\n  \"password\": \"sunnypassword123\",\n  \"role\": \"admin\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/auth/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "auth", "register"]
+        }
+      }
+    },
+    {
+      "name": "3. Auth - Login Admin (Get JWT Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Login returns accessToken in data', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.data).to.have.property('accessToken');",
+              "    pm.collectionVariables.set('jwt_token', jsonData.data.accessToken);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"sunnykumar6207058974@gmail.com\",\n  \"password\": \"sunnypassword123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "4. Auth - Get Profile (Protected)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Profile returns user data', function () { var jsonData = pm.response.json(); pm.expect(jsonData.success).to.be.true; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:5001/api/auth/profile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "auth", "profile"]
+        }
+      }
+    },
+    {
+      "name": "5. Projects - Get All Projects",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Projects data is array', function () { var jsonData = pm.response.json(); pm.expect(jsonData.data).to.be.an('array'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/projects",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "projects"]
+        }
+      }
+    },
+    {
+      "name": "6. Projects - Create Project (Protected)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('Project created', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    if (jsonData.data && (jsonData.data._id || jsonData.data.id)) {",
+              "        pm.collectionVariables.set('created_project_id', jsonData.data._id || jsonData.data.id);",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Postman Collection Project\",\n  \"category\": \"Web Apps\",\n  \"description\": \"Created via Postman Collection Runner\",\n  \"tech\": [\"React\", \"Node.js\", \"MongoDB\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/projects",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "projects"]
+        }
+      }
+    },
+    {
+      "name": "7. Projects - Update Project (Protected)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Project updated', function () { var jsonData = pm.response.json(); pm.expect(jsonData.success).to.be.true; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated Postman Project Title\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/projects/{{created_project_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "projects", "{{created_project_id}}"]
+        }
+      }
+    },
+    {
+      "name": "8. Projects - Delete Project (Protected)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Project deleted', function () { var jsonData = pm.response.json(); pm.expect(jsonData.success).to.be.true; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:5001/api/projects/{{created_project_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "projects", "{{created_project_id}}"]
+        }
+      }
+    },
+    {
+      "name": "9. Services - Get All Services",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Services data is array', function () { var jsonData = pm.response.json(); pm.expect(jsonData.data).to.be.an('array'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/services",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "services"]
+        }
+      }
+    },
+    {
+      "name": "10. Skills - Get All Skills",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Skills data is array', function () { var jsonData = pm.response.json(); pm.expect(jsonData.data).to.be.an('array'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/skills",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "skills"]
+        }
+      }
+    },
+    {
+      "name": "11. Contact - Submit Message Form",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('Message submitted successfully', function () { var jsonData = pm.response.json(); pm.expect(jsonData.success).to.be.true; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alex Rivers\",\n  \"email\": \"alex@example.com\",\n  \"subject\": \"Web Development Proposal\",\n  \"message\": \"Hi Sunny, we want to hire you for building a React & Node.js application.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/contact",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "contact"]
+        }
+      }
+    },
+    {
+      "name": "12. Admin - Get Analytics Dashboard",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Dashboard stats present', function () { var jsonData = pm.response.json(); pm.expect(jsonData.success).to.be.true; });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/api/admin/dashboard",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "admin", "dashboard"]
+        }
+      }
+    }
+  ]
+}

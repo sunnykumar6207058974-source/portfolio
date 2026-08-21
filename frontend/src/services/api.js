@@ -1,0 +1,123 @@
+const API_BASE_URL = "http://localhost:5001/api";
+
+/**
+ * Universal Fetch Helper for PixelForge API
+ */
+export const fetchAPI = async (endpoint, options = {}) => {
+  const { method = "GET", body = null, token = null, headers = {} } = options;
+
+  const authToken = token || localStorage.getItem("pixelforge_accessToken");
+
+  const reqHeaders = {
+    "Content-Type": "application/json",
+    ...headers,
+  };
+
+  if (authToken) {
+    reqHeaders["Authorization"] = `Bearer ${authToken}`;
+  }
+
+  const config = {
+    method,
+    headers: reqHeaders,
+  };
+
+  if (body) {
+    config.body = typeof body === "string" ? body : JSON.stringify(body);
+  }
+
+  try {
+    const url = endpoint.startsWith("http") ? endpoint : `${API_BASE_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+    const response = await fetch(url, config);
+
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      data = { success: response.ok };
+    }
+
+    if (!response.ok) {
+      return {
+        success: false,
+        status: response.status,
+        error: data.error || data.message || `HTTP ${response.status} Error`,
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      status: response.status,
+      ...data,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err.message || "Network Error: Unable to connect to backend server.",
+      data: null,
+    };
+  }
+};
+
+/* ==================== PROJECTS API ==================== */
+export const apiGetProjects = (category) =>
+  fetchAPI(`/projects${category && category !== "All" ? `?category=${category}` : ""}`);
+
+export const apiGetProjectById = (id) => fetchAPI(`/projects/${id}`);
+
+export const apiCreateProject = (projectData) =>
+  fetchAPI("/projects", { method: "POST", body: projectData });
+
+export const apiUpdateProject = (id, projectData) =>
+  fetchAPI(`/projects/${id}`, { method: "PUT", body: projectData });
+
+export const apiDeleteProject = (id) =>
+  fetchAPI(`/projects/${id}`, { method: "DELETE" });
+
+/* ==================== SERVICES API ==================== */
+export const apiGetServices = () => fetchAPI("/services");
+
+export const apiCreateService = (serviceData) =>
+  fetchAPI("/services", { method: "POST", body: serviceData });
+
+export const apiUpdateService = (id, serviceData) =>
+  fetchAPI(`/services/${id}`, { method: "PUT", body: serviceData });
+
+export const apiDeleteService = (id) =>
+  fetchAPI(`/services/${id}`, { method: "DELETE" });
+
+/* ==================== SKILLS API ==================== */
+export const apiGetSkills = () => fetchAPI("/skills");
+
+export const apiCreateSkill = (skillData) =>
+  fetchAPI("/skills", { method: "POST", body: skillData });
+
+export const apiUpdateSkill = (id, skillData) =>
+  fetchAPI(`/skills/${id}`, { method: "PUT", body: skillData });
+
+export const apiDeleteSkill = (id) =>
+  fetchAPI(`/skills/${id}`, { method: "DELETE" });
+
+/* ==================== CONTACT MESSAGES API ==================== */
+export const apiSubmitContact = (contactData) =>
+  fetchAPI("/contact", { method: "POST", body: contactData });
+
+export const apiGetContactMessages = () => fetchAPI("/contact");
+
+export const apiDeleteContactMessage = (id) =>
+  fetchAPI(`/contact/${id}`, { method: "DELETE" });
+
+/* ==================== AUTHENTICATION API ==================== */
+export const apiLoginUser = (email, password) =>
+  fetchAPI("/auth/login", { method: "POST", body: { email, password } });
+
+export const apiGetMe = () => fetchAPI("/auth/me");
+
+/* ==================== ADMIN & SITE CONFIG API ==================== */
+export const apiGetDashboardData = () => fetchAPI("/admin/dashboard");
+
+export const apiGetSiteConfig = () => fetchAPI("/config");
+
+export const apiUpdateSiteConfig = (configData) =>
+  fetchAPI("/config", { method: "PUT", body: configData });
