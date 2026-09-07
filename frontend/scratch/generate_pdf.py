@@ -3,7 +3,7 @@ import base64
 import subprocess
 
 # Paths
-assets_dir = "/Users/sunnykumar/portfolio/PixelForge/public"
+assets_dir = "/Users/sunnykumar/portfolio/frontend/public"
 profile_img_path = os.path.join(assets_dir, "profile.jpg")
 html_path = os.path.join(assets_dir, "resume_temp.html")
 pdf_path = os.path.join(assets_dir, "Sunny_Kumar_Resume.pdf")
@@ -157,7 +157,8 @@ html_content = f"""<!DOCTYPE html>
       <div class="contact-bar">
         <div class="contact-item"><strong>Email:</strong> sunnykumar6207058974@gmail.com</div>
         <div class="contact-item"><strong>Phone:</strong> +91 8340112045</div>
-        <div class="contact-item"><strong>Location:</strong> India</div>
+        <div class="contact-item"><strong>Portfolio:</strong> <a href="https://portfolio-iota-six-26.vercel.app" style="color: #0891b2; text-decoration: none;">portfolio-iota-six-26.vercel.app</a></div>
+        <div class="contact-item"><strong>GitHub:</strong> <a href="https://github.com/sunnykumar6207058974-source" style="color: #0891b2; text-decoration: none;">github.com/sunnykumar6207058974-source</a></div>
       </div>
     </div>
   </div>
@@ -195,8 +196,12 @@ html_content = f"""<!DOCTYPE html>
 
     <div class="project-item">
       <div class="project-header">
-        <span>1. Cartify - Premium E-Commerce Shopping Platform</span>
-        <span class="project-date">2026</span>
+        <span>1. Cartify - Premium E-Commerce Platform</span>
+        <span class="project-date">
+          <a href="https://cartify-store-amber.vercel.app" style="color: #0891b2; text-decoration: none; font-weight: bold; margin-right: 6px;">[Live Demo]</a>
+          <a href="https://github.com/sunnykumar6207058974-source/Cartify" style="color: #475569; text-decoration: none; font-weight: 500; margin-right: 6px;">[GitHub]</a>
+          2026
+        </span>
       </div>
       <div class="project-desc">
         Built a full-stack e-commerce platform with product category management, interactive shopping cart, dark mode toggle, and instant dispatch tracking.
@@ -206,7 +211,11 @@ html_content = f"""<!DOCTYPE html>
     <div class="project-item">
       <div class="project-header">
         <span>2. UrbanThread - Luxe Sneakers & Streetwear Drops</span>
-        <span class="project-date">2026</span>
+        <span class="project-date">
+          <a href="https://urban-thread-sand.vercel.app" style="color: #0891b2; text-decoration: none; font-weight: bold; margin-right: 6px;">[Live Demo]</a>
+          <a href="https://github.com/sunnykumar6207058974-source/UrbanThread" style="color: #475569; text-decoration: none; font-weight: 500; margin-right: 6px;">[GitHub]</a>
+          2026
+        </span>
       </div>
       <div class="project-desc">
         Developed a high-end streetwear e-commerce platform featuring sneaker drops, flash deal banners, promo code engine, wishlist, and admin analytics dashboard.
@@ -215,8 +224,12 @@ html_content = f"""<!DOCTYPE html>
 
     <div class="project-item">
       <div class="project-header">
-        <span>3. PixelForge - Developer Portfolio & Digital Showcase</span>
-        <span class="project-date">2026</span>
+        <span>3. PixelForge - Developer Portfolio & Showcase</span>
+        <span class="project-date">
+          <a href="https://portfolio-iota-six-26.vercel.app" style="color: #0891b2; text-decoration: none; font-weight: bold; margin-right: 6px;">[Live Demo]</a>
+          <a href="https://github.com/sunnykumar6207058974-source/portfolio" style="color: #475569; text-decoration: none; font-weight: 500; margin-right: 6px;">[GitHub]</a>
+          2026
+        </span>
       </div>
       <div class="project-desc">
         Created an interactive developer portfolio featuring an HTML5 canvas particle background, theme switching context, video demo popups, custom cursor, and printable resume viewer.
@@ -226,7 +239,11 @@ html_content = f"""<!DOCTYPE html>
     <div class="project-item">
       <div class="project-header">
         <span>4. Aetheria - Immersive WebGL 3D Matrix Experience</span>
-        <span class="project-date">2026</span>
+        <span class="project-date">
+          <a href="https://aetheria-3d.vercel.app" style="color: #0891b2; text-decoration: none; font-weight: bold; margin-right: 6px;">[Live Demo]</a>
+          <a href="https://github.com/sunny/aetheria" style="color: #475569; text-decoration: none; font-weight: 500; margin-right: 6px;">[GitHub]</a>
+          2026
+        </span>
       </div>
       <div class="project-desc">
         Architected a 3D WebGL digital experience with 60 FPS matrix torus particles, audio sound FX, zero-trust API security, and ultra-fast sub-second loading speeds.

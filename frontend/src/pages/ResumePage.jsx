@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { HiDownload, HiPrinter, HiMail, HiPhone, HiLocationMarker } from "react-icons/hi";
+import {
+  HiDownload,
+  HiPrinter,
+  HiMail,
+  HiPhone,
+  HiLocationMarker,
+  HiExternalLink,
+  HiCode,
+  HiGlobeAlt,
+} from "react-icons/hi";
 import profilePhoto from "../assets/profile.jpg";
 import { fetchSiteConfig, resolveResumeUrl } from "../utils/resume";
 import { apiGetProjects } from "../services/api";
@@ -11,30 +20,40 @@ const ResumePage = () => {
     email: "sunnykumar6207058974@gmail.com",
     phone: "+91 8340112045",
     location: "India",
+    portfolioUrl: "https://portfolio-iota-six-26.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source",
     bio: "Passionate and versatile Full-Stack Web Developer and Video Editor with a strong foundation in building modern, high-performance web applications and crafting engaging visual media. Skilled in React.js, Node.js, Tailwind CSS, and creative video editing to deliver impactful digital products and seamless user experiences.",
     resumeUrl: "/Sunny_Kumar_Resume.pdf",
   });
 
   const [projects, setProjects] = useState([
     {
-      title: "Cartify - Premium E-Commerce Shopping Platform",
+      title: "1. Cartify - Premium E-Commerce Platform",
       year: "2026",
       desc: "Built a full-stack e-commerce platform with product category management, interactive shopping cart, dark mode toggle, and instant dispatch tracking.",
+      demoUrl: "https://cartify-store-amber.vercel.app",
+      githubUrl: "https://github.com/sunnykumar6207058974-source/Cartify",
     },
     {
-      title: "UrbanThread - Luxe Sneakers & Streetwear Drops",
+      title: "2. UrbanThread - Luxe Sneakers & Streetwear Drops",
       year: "2026",
       desc: "Developed a high-end streetwear e-commerce platform featuring sneaker drops, flash deal banners, promo code engine, wishlist, and admin analytics dashboard.",
+      demoUrl: "https://urban-thread-sand.vercel.app",
+      githubUrl: "https://github.com/sunnykumar6207058974-source/UrbanThread",
     },
     {
-      title: "PixelForge - Developer Portfolio & Digital Showcase",
+      title: "3. PixelForge - Developer Portfolio & Showcase",
       year: "2026",
       desc: "Created an interactive developer portfolio featuring an HTML5 canvas particle background, theme switching context, video demo popups, custom cursor, and printable resume viewer.",
+      demoUrl: "https://portfolio-iota-six-26.vercel.app",
+      githubUrl: "https://github.com/sunnykumar6207058974-source/portfolio",
     },
     {
-      title: "Aetheria - Immersive WebGL 3D Matrix Experience",
+      title: "4. Aetheria - Immersive WebGL 3D Matrix Experience",
       year: "2026",
       desc: "Architected a 3D WebGL digital experience with 60 FPS matrix torus particles, audio sound FX, zero-trust API security, and ultra-fast sub-second loading speeds.",
+      demoUrl: "https://aetheria-3d.vercel.app",
+      githubUrl: "https://github.com/sunny/aetheria",
     },
   ]);
 
@@ -64,6 +83,8 @@ const ResumePage = () => {
             title: `${idx + 1}. ${p.title}`,
             year: "2026",
             desc: p.description || p.category || "Full-stack project showcase.",
+            demoUrl: p.demoUrl,
+            githubUrl: p.githubUrl,
           }));
           setProjects(formatted);
         }
@@ -134,7 +155,7 @@ const ResumePage = () => {
           </div>
 
           {/* Contact Details Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-6 border-b border-slate-200 dark:border-slate-800 text-xs sm:text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-6 border-b border-slate-200 dark:border-slate-800 text-xs sm:text-sm">
             <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
               <HiMail className="text-cyan-500 text-lg shrink-0" />
               <a href={`mailto:${profile.email}`} className="hover:text-cyan-500 truncate">
@@ -150,8 +171,29 @@ const ResumePage = () => {
             </div>
 
             <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-              <HiLocationMarker className="text-cyan-500 text-lg shrink-0" />
-              <span>{profile.location}</span>
+              <HiGlobeAlt className="text-cyan-500 text-lg shrink-0" />
+              <a
+                href={profile.portfolioUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cyan-500 truncate font-semibold"
+                title="Live Portfolio Website"
+              >
+                Live Portfolio
+              </a>
+            </div>
+
+            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+              <HiCode className="text-cyan-500 text-lg shrink-0" />
+              <a
+                href={profile.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cyan-500 truncate font-semibold"
+                title="GitHub Profile"
+              >
+                GitHub Profile
+              </a>
             </div>
           </div>
 
@@ -198,10 +240,34 @@ const ResumePage = () => {
             </h3>
             <div className="space-y-4 text-xs sm:text-sm">
               {projects.map((proj, i) => (
-                <div key={i}>
-                  <div className="flex justify-between items-center font-bold text-slate-900 dark:text-white">
-                    <span>{proj.title}</span>
-                    <span className="text-cyan-600 dark:text-cyan-400 text-xs">{proj.year}</span>
+                <div key={i} className="pb-3 border-b border-slate-100 dark:border-slate-800/60 last:border-0 last:pb-0">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 font-bold text-slate-900 dark:text-white">
+                    <span className="text-sm sm:text-base">{proj.title}</span>
+                    <div className="flex items-center gap-3 text-xs">
+                      {proj.demoUrl && (
+                        <a
+                          href={proj.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-cyan-600 dark:text-cyan-400 hover:underline font-semibold flex items-center gap-1 transition"
+                        >
+                          <HiExternalLink className="text-sm" />
+                          Live Demo
+                        </a>
+                      )}
+                      {proj.githubUrl && (
+                        <a
+                          href={proj.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate-500 hover:text-cyan-500 font-medium flex items-center gap-1 transition"
+                        >
+                          <HiCode className="text-sm" />
+                          GitHub
+                        </a>
+                      )}
+                      <span className="text-slate-400 font-normal">{proj.year}</span>
+                    </div>
                   </div>
                   <p className="text-slate-600 dark:text-slate-400 mt-1">
                     {proj.desc}
