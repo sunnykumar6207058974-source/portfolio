@@ -167,7 +167,13 @@ html_content = f"""<!DOCTYPE html>
   <div class="section">
     <div class="section-title">Professional Summary</div>
     <div class="summary-text">
-      Innovative Full-Stack Web Developer and Software Engineer with strong expertise in modern web architectures, scalable systems, and Artificial Intelligence & Machine Learning integrations. Proven experience in architecting full-stack applications with React.js, Node.js, Express, and MongoDB, paired with practical knowledge of Python, ML algorithms, generative AI APIs, and automated data-driven pipelines. Dedicated to combining clean software craftsmanship with engaging visual media and video production.
+      <ul style="padding-left: 18px; line-height: 1.5; margin: 0; font-size: 12px; color: #334155;">
+        <li style="margin-bottom: 3px;">Innovative Full-Stack Web Developer with expertise in architecting high-performance, scalable web applications.</li>
+        <li style="margin-bottom: 3px;">Proficient in engineering end-to-end modern software using React.js, Node.js, Express.js, and MongoDB.</li>
+        <li style="margin-bottom: 3px;">Hands-on experience in Artificial Intelligence & Machine Learning, integrating Python pipelines, predictive models, and generative AI APIs.</li>
+        <li style="margin-bottom: 3px;">Skilled in building secure RESTful APIs, responsive UI/UX design, database optimization, and cloud deployment on Vercel & Render.</li>
+        <li style="margin-bottom: 3px;">Proven ability to combine technical software craftsmanship with creative video editing to deliver impactful, high-retention digital experiences.</li>
+      </ul>
     </div>
   </div>
 
