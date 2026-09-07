@@ -2,18 +2,19 @@ import nodemailer from "nodemailer";
 
 export const sendEmail = async ({ to, subject, html, text }) => {
   try {
+    const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
+    const pass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "").replace(/\s+/g, "");
+
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
+      service: "gmail",
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user,
+        pass,
       },
     });
 
     const mailOptions = {
-      from: `"${process.env.FROM_NAME || "PixelForge Portfolio"}" <${process.env.FROM_EMAIL || "sunnykumar6207058974@gmail.com"}>`,
+      from: `"${process.env.FROM_NAME || "PixelForge Portfolio"}" <${user}>`,
       to,
       subject,
       text,
@@ -21,10 +22,12 @@ export const sendEmail = async ({ to, subject, html, text }) => {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log(`✉️ Nodemailer Email sent: ${info.messageId}`);
+    console.log(`✉️ Nodemailer Email successfully sent to ${to}: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.warn(`ℹ️ Nodemailer Notice: ${error.message} (Logged email alert locally).`);
+    console.warn(`❌ Nodemailer Error: ${error.message}`);
     return { success: false, error: error.message };
   }
 };
+
+export { sendWelcomeEmailToClient } from "../src/services/emailService.js";
