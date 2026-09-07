@@ -13,6 +13,7 @@ import serviceRoutes from "./routes/serviceRoutes.js";
 import skillRoutes from "./routes/skillRoutes.js";
 import siteConfigRoutes from "./routes/siteConfigRoutes.js";
 import extraRoutes from "./routes/extraRoutes.js";
+import trackerRoutes from "../routes/trackerRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
@@ -123,6 +124,9 @@ app.use("/api/config", siteConfigRoutes);
 app.use("/config", siteConfigRoutes);
 app.use("/api/settings", siteConfigRoutes);
 app.use("/settings", siteConfigRoutes);
+
+app.use("/api/tracker", trackerRoutes);
+app.use("/tracker", trackerRoutes);
 
 app.use("/api", extraRoutes);
 app.use("/", extraRoutes);
