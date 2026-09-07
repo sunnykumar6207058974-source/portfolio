@@ -2,8 +2,8 @@
 
 ![PixelForge Showcase Banner](README_assets/pixelforge_banner.jpg)
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-cyan?style=for-the-badge&logo=vercel)](https://pixelforge-sunny.vercel.app)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-purple?style=for-the-badge&logo=github)](https://github.com/sunny/pixelforge)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-cyan?style=for-the-badge&logo=vercel)](https://portfolio-iota-six-26.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-purple?style=for-the-badge&logo=github)](https://github.com/sunnykumar6207058974-source/portfolio)
 [![Node.js](https://img.shields.io/badge/Node.js-v24.16.0-green?style=for-the-badge&logo=nodedotjs)](https://nodejs.org)
 [![React](https://img.shields.io/badge/React-v19.2.7-blue?style=for-the-badge&logo=react)](https://react.dev)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-emerald?style=for-the-badge&logo=mongodb)](https://mongodb.com)
@@ -22,8 +22,8 @@
 
 ## 🌐 Live Demo & Repository
 
-- **🌐 Live Production Web App**: [https://pixelforge-sunny.vercel.app](https://pixelforge-sunny.vercel.app)
-- **💻 GitHub Source Code Repository**: [https://github.com/sunny/pixelforge](https://github.com/sunny/pixelforge)
+- **🌐 Live Production Web App**: [https://portfolio-iota-six-26.vercel.app](https://portfolio-iota-six-26.vercel.app)
+- **💻 GitHub Source Code Repository**: [https://github.com/sunnykumar6207058974-source/portfolio](https://github.com/sunnykumar6207058974-source/portfolio)
 - **⚡ Express API Health Check**: [http://localhost:5001/api/health](http://localhost:5001/api/health)
 - **🔐 Admin Analytics Portal**: [http://localhost:5173/admin](http://localhost:5173/admin)
 

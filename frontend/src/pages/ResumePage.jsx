@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { HiDownload, HiPrinter, HiMail, HiPhone, HiLocationMarker } from "react-icons/hi";
 import profilePhoto from "../assets/profile.jpg";
 import { fetchSiteConfig, resolveResumeUrl } from "../utils/resume";
+import { apiGetProjects } from "../services/api";
 
 const ResumePage = () => {
   const [profile, setProfile] = useState({
@@ -55,11 +56,11 @@ const ResumePage = () => {
       }
     });
 
-    fetch("http://localhost:5001/projects")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && Array.isArray(data) && data.length > 0) {
-          const formatted = data.map((p, idx) => ({
+    apiGetProjects()
+      .then((res) => {
+        const items = res && res.data ? res.data : res;
+        if (Array.isArray(items) && items.length > 0) {
+          const formatted = items.map((p, idx) => ({
             title: `${idx + 1}. ${p.title}`,
             year: "2026",
             desc: p.description || p.category || "Full-stack project showcase.",

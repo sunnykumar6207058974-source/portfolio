@@ -23,8 +23,8 @@ export const seedDatabase = async () => {
             "Category Filters & Product Search Bar",
             "Dark / Light Theme & 24/7 Express Support",
           ],
-          demoUrl: "https://cartify-shopping.vercel.app",
-          githubUrl: "https://github.com/sunny/cartify",
+          demoUrl: "https://cartify-store-amber.vercel.app",
+          githubUrl: "https://github.com/sunnykumar6207058974-source/Cartify",
           videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         },
         {
@@ -39,8 +39,8 @@ export const seedDatabase = async () => {
             "Promo Code Discount Engine (SNEAKER20)",
             "Wishlist, Cart Drawer & Admin Analytics Dashboard",
           ],
-          demoUrl: "https://urbanthread-luxe.vercel.app",
-          githubUrl: "https://github.com/sunny/urbanthread",
+          demoUrl: "https://urban-thread-sand.vercel.app",
+          githubUrl: "https://github.com/sunnykumar6207058974-source/UrbanThread",
           videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         },
         {
@@ -55,8 +55,8 @@ export const seedDatabase = async () => {
             "Full Video Walkthrough Modals & Auto-Play Hover",
             "Dark / Light Theme System & Printable Resume Viewer",
           ],
-          demoUrl: "https://pixelforge-sunny.vercel.app",
-          githubUrl: "https://github.com/sunny/pixelforge",
+          demoUrl: "https://portfolio-iota-six-26.vercel.app",
+          githubUrl: "https://github.com/sunnykumar6207058974-source/portfolio",
           videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
         },
         {

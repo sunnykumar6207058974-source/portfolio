@@ -11,8 +11,8 @@ const initialProjects = [
     description:
       "A premium e-commerce platform offering smooth shopping experiences, product categories, interactive cart checkout, dark mode toggle, and instant dispatch tracking.",
     tech: ["React", "Node.js", "Tailwind CSS", "MongoDB", "Express"],
-    demoUrl: "https://cartify-shopping.vercel.app",
-    githubUrl: "https://github.com/sunny/cartify",
+    demoUrl: "https://cartify-store-amber.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/Cartify",
     image: "/assets/projects/cartify.jpg",
     features: [
       "Interactive Shopping Cart & Express Checkout",
@@ -28,8 +28,8 @@ const initialProjects = [
     description:
       "A high-end streetwear e-commerce platform featuring exclusive sneaker drops, flash sales, promo code discount engine, wishlist, and admin dashboard.",
     tech: ["React", "Tailwind CSS", "Redux", "REST API", "Vite"],
-    demoUrl: "https://urbanthread-luxe.vercel.app",
-    githubUrl: "https://github.com/sunny/urbanthread",
+    demoUrl: "https://urban-thread-sand.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/UrbanThread",
     image: "/assets/projects/urbanthread.jpg",
     features: [
       "Sneakerhead Drops & Flash Deal Banners",
@@ -45,8 +45,8 @@ const initialProjects = [
     description:
       "A futuristic developer portfolio featuring interactive canvas particle network, animated typing hero, project demo video popups, custom cursor, and printable resume viewer.",
     tech: ["React", "Framer Motion", "Tailwind CSS", "HTML5 Canvas", "Vite"],
-    demoUrl: "https://pixelforge-sunny.vercel.app",
-    githubUrl: "https://github.com/sunny/pixelforge",
+    demoUrl: "https://portfolio-iota-six-26.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/portfolio",
     image: "/assets/projects/pixelforge.jpg",
     features: [
       "Interactive HTML5 Canvas Particle Field",

@@ -20,8 +20,8 @@ const defaultProjects = [
     tech: ["React", "Node.js", "Tailwind CSS", "MongoDB", "Express"],
     videoUrl:
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    demoUrl: "https://cartify-shopping.vercel.app",
-    githubUrl: "https://github.com/sunny/cartify",
+    demoUrl: "https://cartify-store-amber.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/Cartify",
     features: [
       "Interactive Shopping Cart & Express Checkout",
       "Category Filters & Product Search Bar",
@@ -39,8 +39,8 @@ const defaultProjects = [
     tech: ["React", "Tailwind CSS", "Redux", "REST API", "Vite"],
     videoUrl:
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    demoUrl: "https://urbanthread-luxe.vercel.app",
-    githubUrl: "https://github.com/sunny/urbanthread",
+    demoUrl: "https://urban-thread-sand.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/UrbanThread",
     features: [
       "Sneakerhead Drops & Flash Deal Banners",
       "Promo Code Discount Engine (SNEAKER20)",
@@ -58,8 +58,8 @@ const defaultProjects = [
     tech: ["React", "Framer Motion", "Tailwind CSS", "HTML5 Canvas", "Vite"],
     videoUrl:
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    demoUrl: "https://pixelforge-sunny.vercel.app",
-    githubUrl: "https://github.com/sunny/pixelforge",
+    demoUrl: "https://portfolio-iota-six-26.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/portfolio",
     features: [
       "Interactive HTML5 Canvas Particle Field",
       "Full Video Walkthrough Modals & Auto-Play Hover",
@@ -254,20 +254,32 @@ const Portfolio = () => {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center justify-between gap-3 pt-5 border-t border-slate-100 dark:border-slate-800/80">
+                  <div className="flex items-center justify-between gap-2.5 pt-5 border-t border-slate-100 dark:border-slate-800/80">
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-2.5 px-3.5 rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20"
+                      title="Open Live Project"
+                    >
+                      <HiExternalLink className="text-base" />
+                      Live Demo
+                    </a>
+
                     <button
                       onClick={() => setSelectedProject(project)}
-                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-cyan-500/20"
+                      className="p-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition cursor-pointer flex items-center gap-1.5 text-sm font-medium"
+                      title="View Details & Highlights"
                     >
-                      <HiPlay className="text-lg" />
-                      View Demo & Details
+                      <HiPlay className="text-base text-cyan-500" />
+                      <span>Details</span>
                     </button>
 
                     <a
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
+                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
                       title="View GitHub Repository"
                     >
                       <HiCode className="text-lg" />
