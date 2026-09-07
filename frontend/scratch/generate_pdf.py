@@ -263,7 +263,7 @@ html_content = f"""<!DOCTYPE html>
     <div class="education-item">
       <div class="edu-title">B.Tech in Computer Science & Engineering</div>
       <div class="summary-text" style="font-size: 11.5px; color: #64748b;">
-        Focused on Web Application Development, Database Management Systems, Software Architecture, and Visual Digital Media.
+        Focused on Artificial Intelligence & Machine Learning, Web Architecture, Software Engineering, and Digital Media.
       </div>
     </div>
   </div>
