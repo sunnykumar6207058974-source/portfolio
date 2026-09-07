@@ -153,7 +153,7 @@ html_content = f"""<!DOCTYPE html>
     <img src="data:image/jpeg;base64,{img_base64}" class="profile-img" alt="Sunny Kumar">
     <div class="header-info">
       <div class="name">Sunny Kumar</div>
-      <div class="title">Full-Stack Web Developer & Professional Video Editor</div>
+      <div class="title">Full-Stack Web Developer | AI & Machine Learning | Video Editor</div>
       <div class="contact-bar">
         <div class="contact-item"><strong>Email:</strong> sunnykumar6207058974@gmail.com</div>
         <div class="contact-item"><strong>Phone:</strong> +91 8340112045</div>
@@ -167,7 +167,7 @@ html_content = f"""<!DOCTYPE html>
   <div class="section">
     <div class="section-title">Professional Summary</div>
     <div class="summary-text">
-      Passionate and versatile Full-Stack Web Developer and Video Editor with a strong foundation in building modern, high-performance web applications and crafting engaging visual media. Skilled in React.js, Node.js, Tailwind CSS, and creative video editing to deliver impactful digital products and seamless user experiences.
+      Innovative Full-Stack Web Developer and Software Engineer with strong expertise in modern web architectures, scalable systems, and Artificial Intelligence & Machine Learning integrations. Proven experience in architecting full-stack applications with React.js, Node.js, Express, and MongoDB, paired with practical knowledge of Python, ML algorithms, generative AI APIs, and automated data-driven pipelines. Dedicated to combining clean software craftsmanship with engaging visual media and video production.
     </div>
   </div>
 
@@ -176,9 +176,15 @@ html_content = f"""<!DOCTYPE html>
     <div class="section-title">Technical & Creative Skills</div>
     <div class="grid-2">
       <div class="col">
-        <div class="col-title">💻 Web Development Stack</div>
+        <div class="col-title">💻 Full-Stack Development</div>
         <div class="skill-list">
-          React.js, JavaScript (ES6+), Node.js, Express.js, Tailwind CSS, HTML5, CSS3, REST APIs, MongoDB, Git & GitHub, Vercel, Vite.
+          React.js, JavaScript (ES6+), Node.js, Express.js, Tailwind CSS, HTML5/CSS3, REST APIs, MongoDB, Git/GitHub, Vercel, Vite.
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">🤖 Artificial Intelligence & ML</div>
+        <div class="skill-list">
+          Python, Machine Learning Fundamentals, Scikit-Learn, Generative AI & LLM APIs, Prompt Engineering, Predictive Modeling, AI Automation.
         </div>
       </div>
       <div class="col">

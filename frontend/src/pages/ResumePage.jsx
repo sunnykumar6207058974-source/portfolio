@@ -16,13 +16,13 @@ import { apiGetProjects } from "../services/api";
 const ResumePage = () => {
   const [profile, setProfile] = useState({
     name: "Sunny Kumar",
-    title: "Full-Stack Web Developer & Video Editor",
+    title: "Full-Stack Web Developer | AI & Machine Learning | Video Editor",
     email: "sunnykumar6207058974@gmail.com",
     phone: "+91 8340112045",
     location: "India",
     portfolioUrl: "https://portfolio-iota-six-26.vercel.app",
     githubUrl: "https://github.com/sunnykumar6207058974-source",
-    bio: "Passionate and versatile Full-Stack Web Developer and Video Editor with a strong foundation in building modern, high-performance web applications and crafting engaging visual media. Skilled in React.js, Node.js, Tailwind CSS, and creative video editing to deliver impactful digital products and seamless user experiences.",
+    bio: "Innovative Full-Stack Web Developer and Software Engineer with strong expertise in modern web architectures, scalable systems, and Artificial Intelligence & Machine Learning integrations. Proven experience in architecting full-stack applications with React.js, Node.js, Express, and MongoDB, paired with practical knowledge of Python, ML algorithms, generative AI APIs, and automated data-driven pipelines. Dedicated to combining clean software craftsmanship with engaging visual media and video production.",
     resumeUrl: "/Sunny_Kumar_Resume.pdf",
   });
 
@@ -212,13 +212,22 @@ const ResumePage = () => {
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
               Core Skills & Technologies
             </h3>
-            <div className="grid sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm">
               <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-2">
-                  💻 Web Development Stack:
+                  💻 Full-Stack Development:
                 </h4>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  React.js, JavaScript (ES6+), Node.js, Express.js, Tailwind CSS, HTML5, CSS3, REST APIs, MongoDB, Git & GitHub, Vercel, Vite.
+                  React.js, JavaScript (ES6+), Node.js, Express.js, Tailwind CSS, HTML5/CSS3, REST APIs, MongoDB, Git/GitHub, Vercel, Vite.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+                <h4 className="font-bold text-slate-900 dark:text-white mb-2">
+                  🤖 Artificial Intelligence & ML:
+                </h4>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Python, Machine Learning Fundamentals, Scikit-Learn, Generative AI & LLM APIs, Prompt Engineering, Predictive Modeling, AI Automation.
                 </p>
               </div>
 
