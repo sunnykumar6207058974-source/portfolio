@@ -43,11 +43,16 @@ const ClientTrackerPage = () => {
 
   const fetchTracker = async (code) => {
     if (!code || !code.trim()) return;
+    const clean = code
+      .trim()
+      .replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/g, "-")
+      .toUpperCase();
+
     setLoading(true);
     setError("");
 
     try {
-      const res = await apiGetTrackerByCode(code.trim());
+      const res = await apiGetTrackerByCode(clean);
       if (res.success && res.data) {
         setTracker(res.data);
       } else {
@@ -65,7 +70,11 @@ const ClientTrackerPage = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!inputCode.trim()) return;
-    navigate(`/track/${inputCode.trim().toUpperCase()}`);
+    const clean = inputCode
+      .trim()
+      .replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/g, "-")
+      .toUpperCase();
+    navigate(`/track/${clean}`);
   };
 
   const handleSendFeedback = (e) => {

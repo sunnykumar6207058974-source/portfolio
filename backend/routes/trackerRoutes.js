@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { ClientTracker } from "../models/ClientTracker.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -97,19 +98,47 @@ let inMemoryTrackers = [
 // GET /api/tracker/:code - Public client tracking view
 router.get("/:code", async (req, res) => {
   try {
-    const code = req.params.code.trim().toUpperCase();
+    const raw = (req.params.code || "").trim();
+    // Normalize unicode dashes (en-dash, em-dash, minus) to standard ASCII hyphen
+    const cleanCode = raw
+      .replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/g, "-")
+      .trim()
+      .toUpperCase();
+    const alphaNumeric = cleanCode.replace(/[^A-Z0-9]/g, "");
 
     let tracker;
-    try {
-      tracker = await ClientTracker.findOne({ trackingCode: code });
-    } catch {
-      // ignore db error, fallback below
+
+    // If MongoDB is connected and ready
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        tracker = await ClientTracker.findOne({
+          $or: [
+            { trackingCode: cleanCode },
+            { trackingCode: new RegExp(`^${cleanCode}$`, "i") },
+            { trackingCode: new RegExp(`^${alphaNumeric}$`, "i") },
+          ],
+        }).maxTimeMS(1200);
+      } catch {
+        // ignore db error, fallback to in-memory
+      }
     }
 
     if (!tracker) {
-      tracker = inMemoryTrackers.find(
-        (t) => t.trackingCode.toUpperCase() === code
-      );
+      tracker = inMemoryTrackers.find((t) => {
+        const tCode = (t.trackingCode || "").toUpperCase();
+        const tAlpha = tCode.replace(/[^A-Z0-9]/g, "");
+        const pName = (t.projectName || "").toUpperCase();
+        const cName = (t.clientName || "").toUpperCase();
+
+        return (
+          tCode === cleanCode ||
+          tAlpha === alphaNumeric ||
+          tCode.includes(cleanCode) ||
+          pName.includes(cleanCode) ||
+          cName.includes(cleanCode) ||
+          (alphaNumeric.length >= 3 && (tAlpha.includes(alphaNumeric) || pName.replace(/[^A-Z0-9]/g, "").includes(alphaNumeric)))
+        );
+      });
     }
 
     if (!tracker) {
