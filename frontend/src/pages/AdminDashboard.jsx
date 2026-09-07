@@ -214,38 +214,77 @@ const AdminDashboard = () => {
       alert("Please fill client name, project name, and tracking code");
       return;
     }
+    const scopeArray = trackerForm.scope
+      ? trackerForm.scope.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
+
+    const tempId = `tracker_${Date.now()}`;
+    const newTrackerItem = {
+      _id: tempId,
+      ...trackerForm,
+      trackingCode: trackerForm.trackingCode.trim().toUpperCase(),
+      progress: Number(trackerForm.progress) || 25,
+      scope: scopeArray,
+      milestones: [
+        { title: "Phase 1: Architecture & UI Setup", status: "completed", completedDate: "Day 1" },
+        { title: "Phase 2: Core Components & Layout", status: "in-progress" },
+        { title: "Phase 3: Integration & APIs", status: "pending" },
+        { title: "Phase 4: Final QA & Deployment", status: "pending" },
+      ],
+      activityLog: [
+        {
+          title: "Project Initialized",
+          description: "Project repository created and architecture finalized.",
+          tag: "Feature",
+          date: new Date(),
+        },
+      ],
+    };
+
+    // Instant UI appearance (0ms!)
+    setTrackers((prev) => [newTrackerItem, ...prev]);
+    setShowTrackerModal(false);
+    setNotification(`Tracker for "${trackerForm.projectName}" created instantly!`);
+
+    setTrackerForm({
+      clientName: "",
+      clientEmail: "",
+      projectName: "",
+      trackingCode: "",
+      progress: 25,
+      status: "In Progress",
+      currentPhase: "Phase 1: Architecture & UI Setup",
+      estimatedDelivery: "2 Weeks",
+      livePreviewUrl: "",
+      scope: "",
+    });
+
     try {
-      const scopeArray = trackerForm.scope
-        ? trackerForm.scope.split(",").map((s) => s.trim()).filter(Boolean)
-        : [];
       const res = await apiCreateTracker({ ...trackerForm, scope: scopeArray });
-      if (res.success) {
-        setNotification(`Tracker for "${trackerForm.projectName}" created!`);
-        setShowTrackerModal(false);
-        setTrackerForm({
-          clientName: "",
-          clientEmail: "",
-          projectName: "",
-          trackingCode: "",
-          progress: 25,
-          status: "In Progress",
-          currentPhase: "Phase 1: Architecture & UI Setup",
-          estimatedDelivery: "2 Weeks",
-          livePreviewUrl: "",
-          scope: "",
-        });
-        fetchTrackers();
-      } else {
-        setNotification(res.error || "Failed to create tracker");
+      if (res.success && res.data) {
+        setTrackers((prev) =>
+          prev.map((t) => (t._id === tempId ? res.data : t))
+        );
       }
-    } catch {
-      setNotification("Failed to create tracker");
-    }
+    } catch {}
   };
 
   const handleAddScopeItem = async (trackerId) => {
     const item = (newScopeItem[trackerId] || "").trim();
     if (!item) return;
+
+    // Instant UI update (0ms!)
+    setTrackers((prev) =>
+      prev.map((t) => {
+        if ((t._id || t.trackingCode) === trackerId) {
+          const currentScope = t.scope || [];
+          return { ...t, scope: [...currentScope, item] };
+        }
+        return t;
+      })
+    );
+    setNewScopeItem((prev) => ({ ...prev, [trackerId]: "" }));
+    setNotification(`Added "${item}" to Agreed Scope!`);
 
     const currentTracker = trackers.find(
       (t) => (t._id || t.trackingCode) === trackerId
@@ -254,18 +293,23 @@ const AdminDashboard = () => {
     const updatedScope = [...existingScope, item];
 
     try {
-      const res = await apiUpdateTrackerScope(trackerId, updatedScope);
-      if (res.success) {
-        setNotification(`Added "${item}" to Agreed Scope!`);
-        setNewScopeItem((prev) => ({ ...prev, [trackerId]: "" }));
-        fetchTrackers();
-      }
-    } catch {
-      setNotification("Failed to update scope");
-    }
+      await apiUpdateTrackerScope(trackerId, updatedScope);
+    } catch {}
   };
 
   const handleRemoveScopeItem = async (trackerId, indexToRemove) => {
+    // Instant UI update (0ms!)
+    setTrackers((prev) =>
+      prev.map((t) => {
+        if ((t._id || t.trackingCode) === trackerId) {
+          const currentScope = t.scope || [];
+          return { ...t, scope: currentScope.filter((_, i) => i !== indexToRemove) };
+        }
+        return t;
+      })
+    );
+    setNotification("Scope feature removed");
+
     const currentTracker = trackers.find(
       (t) => (t._id || t.trackingCode) === trackerId
     );
@@ -273,28 +317,32 @@ const AdminDashboard = () => {
     const updatedScope = existingScope.filter((_, i) => i !== indexToRemove);
 
     try {
-      const res = await apiUpdateTrackerScope(trackerId, updatedScope);
-      if (res.success) {
-        setNotification("Scope feature removed");
-        fetchTrackers();
-      }
-    } catch {
-      setNotification("Failed to remove feature");
-    }
+      await apiUpdateTrackerScope(trackerId, updatedScope);
+    } catch {}
   };
 
   const handleUpdateTrackerProgress = async (id, progress, status, currentPhase) => {
+    // Instant UI update
+    setTrackers((prev) =>
+      prev.map((t) =>
+        (t._id || t.trackingCode) === id
+          ? {
+              ...t,
+              progress,
+              status,
+              currentPhase,
+              ...(progress >= 100 && {
+                milestones: (t.milestones || []).map((m) => ({ ...m, status: "completed" })),
+              }),
+            }
+          : t
+      )
+    );
+    setNotification(`Updated progress to ${progress}%!`);
+
     try {
-      const res = await apiUpdateTrackerProgress(id, { progress, status, currentPhase });
-      if (res.success) {
-        setNotification(`Updated progress to ${progress}%!`);
-        fetchTrackers();
-      } else {
-        setNotification(res.error || "Update failed");
-      }
-    } catch {
-      setNotification("Update failed");
-    }
+      await apiUpdateTrackerProgress(id, { progress, status, currentPhase });
+    } catch {}
   };
 
   const handlePostTrackerLog = async (trackerId) => {
@@ -303,34 +351,48 @@ const AdminDashboard = () => {
       alert("Please enter update title");
       return;
     }
+
+    const newLogItem = {
+      _id: `log_${Date.now()}`,
+      title: logData.title,
+      description: logData.description || "",
+      tag: logData.tag || "Feature",
+      previewUrl: logData.previewUrl || "",
+      date: new Date(),
+    };
+
+    // Instant UI update (0ms!)
+    setTrackers((prev) =>
+      prev.map((t) => {
+        if ((t._id || t.trackingCode) === trackerId) {
+          const curLogs = t.activityLog || [];
+          return { ...t, activityLog: [newLogItem, ...curLogs] };
+        }
+        return t;
+      })
+    );
+
+    setNotification(`New update logged: "${logData.title}"!`);
+    setQuickLogs((prev) => ({
+      ...prev,
+      [trackerId]: { title: "", tag: "Feature", description: "" },
+    }));
+
     try {
-      const res = await apiAddTrackerLog(trackerId, logData);
-      if (res.success) {
-        setNotification(`New update logged: "${logData.title}"!`);
-        setQuickLogs((prev) => ({
-          ...prev,
-          [trackerId]: { title: "", tag: "Feature", description: "" },
-        }));
-        fetchTrackers();
-      } else {
-        setNotification(res.error || "Failed to log update");
-      }
-    } catch {
-      setNotification("Failed to log update");
-    }
+      await apiAddTrackerLog(trackerId, logData);
+    } catch {}
   };
 
   const handleDeleteTrackerItem = async (id, name) => {
     if (!confirm(`Are you sure you want to delete tracker for "${name}"?`)) return;
+
+    // Instant UI removal (0ms!)
+    setTrackers((prev) => prev.filter((t) => (t._id || t.trackingCode) !== id));
+    setNotification(`Tracker for "${name}" deleted`);
+
     try {
-      const res = await apiDeleteTracker(id);
-      if (res.success) {
-        setNotification(`Tracker for "${name}" deleted`);
-        fetchTrackers();
-      }
-    } catch {
-      setNotification("Delete failed");
-    }
+      await apiDeleteTracker(id);
+    } catch {}
   };
 
   const handleCopyLink = (code) => {

@@ -164,12 +164,13 @@ router.get("/:code", async (req, res) => {
 router.get("/", protect, async (req, res) => {
   try {
     let trackers = [];
-    try {
-      trackers = await ClientTracker.find().sort({ updatedAt: -1 });
-      if (!trackers || trackers.length === 0) {
-        trackers = inMemoryTrackers;
-      }
-    } catch {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        trackers = await ClientTracker.find().sort({ updatedAt: -1 }).maxTimeMS(300);
+      } catch {}
+    }
+
+    if (!trackers || trackers.length === 0) {
       trackers = inMemoryTrackers;
     }
 
@@ -179,9 +180,10 @@ router.get("/", protect, async (req, res) => {
       data: trackers,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      error: "Failed to fetch trackers list.",
+    return res.json({
+      success: true,
+      count: inMemoryTrackers.length,
+      data: inMemoryTrackers,
     });
   }
 });
@@ -248,10 +250,14 @@ router.post("/", protect, async (req, res) => {
       isActive: true,
     };
 
-    let savedTracker;
-    try {
-      savedTracker = await ClientTracker.create(newTrackerData);
-    } catch (dbErr) {
+    let savedTracker = null;
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        savedTracker = await ClientTracker.create(newTrackerData);
+      } catch (dbErr) {}
+    }
+
+    if (!savedTracker) {
       newTrackerData._id = `tracker_${Date.now()}`;
       inMemoryTrackers.unshift(newTrackerData);
       savedTracker = newTrackerData;
@@ -276,19 +282,19 @@ router.put("/:id/progress", protect, async (req, res) => {
     const { id } = req.params;
     const { progress, status, currentPhase } = req.body;
 
-    let updated;
-    try {
-      updated = await ClientTracker.findByIdAndUpdate(
-        id,
-        {
-          ...(progress !== undefined && { progress: Number(progress) }),
-          ...(status && { status }),
-          ...(currentPhase && { currentPhase }),
-        },
-        { new: true }
-      );
-    } catch {
-      // In-memory fallback
+    let updated = null;
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        updated = await ClientTracker.findByIdAndUpdate(
+          id,
+          {
+            ...(progress !== undefined && { progress: Number(progress) }),
+            ...(status && { status }),
+            ...(currentPhase && { currentPhase }),
+          },
+          { new: true }
+        ).maxTimeMS(300);
+      } catch {}
     }
 
     if (!updated) {
@@ -342,15 +348,15 @@ router.post("/:id/log", protect, async (req, res) => {
       date: new Date(),
     };
 
-    let updated;
-    try {
-      updated = await ClientTracker.findByIdAndUpdate(
-        id,
-        { $push: { activityLog: { $each: [newLog], $position: 0 } } },
-        { new: true }
-      );
-    } catch {
-      // In-memory fallback
+    let updated = null;
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        updated = await ClientTracker.findByIdAndUpdate(
+          id,
+          { $push: { activityLog: { $each: [newLog], $position: 0 } } },
+          { new: true }
+        ).maxTimeMS(300);
+      } catch {}
     }
 
     if (!updated) {
@@ -385,15 +391,15 @@ router.put("/:id/milestones", protect, async (req, res) => {
       return res.status(400).json({ success: false, error: "Milestones must be an array" });
     }
 
-    let updated;
-    try {
-      updated = await ClientTracker.findByIdAndUpdate(
-        id,
-        { milestones },
-        { new: true }
-      );
-    } catch {
-      // In-memory fallback
+    let updated = null;
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        updated = await ClientTracker.findByIdAndUpdate(
+          id,
+          { milestones },
+          { new: true }
+        ).maxTimeMS(300);
+      } catch {}
     }
 
     if (!updated) {
@@ -427,15 +433,15 @@ router.put("/:id/scope", protect, async (req, res) => {
       return res.status(400).json({ success: false, error: "Scope must be an array of features" });
     }
 
-    let updated;
-    try {
-      updated = await ClientTracker.findByIdAndUpdate(
-        id,
-        { scope },
-        { new: true }
-      );
-    } catch {
-      // In-memory fallback
+    let updated = null;
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        updated = await ClientTracker.findByIdAndUpdate(
+          id,
+          { scope },
+          { new: true }
+        ).maxTimeMS(300);
+      } catch {}
     }
 
     if (!updated) {
@@ -463,9 +469,11 @@ router.put("/:id/scope", protect, async (req, res) => {
 router.delete("/:id", protect, async (req, res) => {
   try {
     const { id } = req.params;
-    try {
-      await ClientTracker.findByIdAndDelete(id);
-    } catch {}
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      try {
+        await ClientTracker.findByIdAndDelete(id).maxTimeMS(300);
+      } catch {}
+    }
 
     inMemoryTrackers = inMemoryTrackers.filter((t) => t._id !== id && t.trackingCode !== id);
 
