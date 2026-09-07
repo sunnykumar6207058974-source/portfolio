@@ -860,13 +860,30 @@ const AdminDashboard = () => {
                           </select>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => handleUpdateTrackerProgress(trackerId, t.progress, t.status, t.currentPhase)}
-                          className="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold transition cursor-pointer whitespace-nowrap"
-                        >
-                          Save
-                        </button>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateTrackerProgress(trackerId, t.progress, t.status, t.currentPhase)}
+                            className="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold transition cursor-pointer whitespace-nowrap"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleUpdateTrackerProgress(
+                                trackerId,
+                                100,
+                                "Completed",
+                                "🎉 All Milestones Delivered & Launched Live!"
+                              );
+                            }}
+                            className="px-2.5 py-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold transition cursor-pointer whitespace-nowrap"
+                            title="1-Click Mark Project 100% Complete"
+                          >
+                            ⚡ 100% Done
+                          </button>
+                        </div>
                       </div>
                     </div>
 

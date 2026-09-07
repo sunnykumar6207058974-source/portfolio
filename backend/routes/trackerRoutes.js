@@ -268,6 +268,12 @@ router.put("/:id/progress", protect, async (req, res) => {
         if (progress !== undefined) inMemoryTrackers[idx].progress = Number(progress);
         if (status) inMemoryTrackers[idx].status = status;
         if (currentPhase) inMemoryTrackers[idx].currentPhase = currentPhase;
+        if (Number(progress) >= 100) {
+          inMemoryTrackers[idx].milestones.forEach((m) => {
+            m.status = "completed";
+            if (!m.completedDate) m.completedDate = "Delivered";
+          });
+        }
         updated = inMemoryTrackers[idx];
       }
     }
