@@ -388,6 +388,48 @@ router.put("/:id/milestones", protect, async (req, res) => {
   }
 });
 
+// PUT /api/tracker/:id/scope - Update agreed project scope deliverables (Admin)
+router.put("/:id/scope", protect, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { scope } = req.body;
+
+    if (!Array.isArray(scope)) {
+      return res.status(400).json({ success: false, error: "Scope must be an array of features" });
+    }
+
+    let updated;
+    try {
+      updated = await ClientTracker.findByIdAndUpdate(
+        id,
+        { scope },
+        { new: true }
+      );
+    } catch {
+      // In-memory fallback
+    }
+
+    if (!updated) {
+      const idx = inMemoryTrackers.findIndex((t) => t._id === id || t.trackingCode === id);
+      if (idx !== -1) {
+        inMemoryTrackers[idx].scope = scope;
+        updated = inMemoryTrackers[idx];
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: "Agreed Scope & Features updated successfully!",
+      data: updated,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Failed to update scope deliverables.",
+    });
+  }
+});
+
 // DELETE /api/tracker/:id - Delete tracker (Admin)
 router.delete("/:id", protect, async (req, res) => {
   try {

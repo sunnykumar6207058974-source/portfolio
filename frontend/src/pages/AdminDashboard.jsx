@@ -13,6 +13,7 @@ import {
   HiLogout,
   HiPencilAlt,
   HiTrash,
+  HiX,
   HiSearch,
   HiUser,
   HiShare,
@@ -41,6 +42,7 @@ import {
   apiCreateTracker,
   apiUpdateTrackerProgress,
   apiAddTrackerLog,
+  apiUpdateTrackerScope,
   apiDeleteTracker,
 } from "../services/api";
 
@@ -101,8 +103,10 @@ const AdminDashboard = () => {
     currentPhase: "Phase 1: Architecture & UI Setup",
     estimatedDelivery: "2 Weeks",
     livePreviewUrl: "",
+    scope: "",
   });
   const [quickLogs, setQuickLogs] = useState({});
+  const [newScopeItem, setNewScopeItem] = useState({});
 
   // Forms State
   const [projectForm, setProjectForm] = useState({
@@ -211,7 +215,10 @@ const AdminDashboard = () => {
       return;
     }
     try {
-      const res = await apiCreateTracker(trackerForm);
+      const scopeArray = trackerForm.scope
+        ? trackerForm.scope.split(",").map((s) => s.trim()).filter(Boolean)
+        : [];
+      const res = await apiCreateTracker({ ...trackerForm, scope: scopeArray });
       if (res.success) {
         setNotification(`Tracker for "${trackerForm.projectName}" created!`);
         setShowTrackerModal(false);
@@ -225,6 +232,7 @@ const AdminDashboard = () => {
           currentPhase: "Phase 1: Architecture & UI Setup",
           estimatedDelivery: "2 Weeks",
           livePreviewUrl: "",
+          scope: "",
         });
         fetchTrackers();
       } else {
@@ -232,6 +240,46 @@ const AdminDashboard = () => {
       }
     } catch {
       setNotification("Failed to create tracker");
+    }
+  };
+
+  const handleAddScopeItem = async (trackerId) => {
+    const item = (newScopeItem[trackerId] || "").trim();
+    if (!item) return;
+
+    const currentTracker = trackers.find(
+      (t) => (t._id || t.trackingCode) === trackerId
+    );
+    const existingScope = currentTracker?.scope || [];
+    const updatedScope = [...existingScope, item];
+
+    try {
+      const res = await apiUpdateTrackerScope(trackerId, updatedScope);
+      if (res.success) {
+        setNotification(`Added "${item}" to Agreed Scope!`);
+        setNewScopeItem((prev) => ({ ...prev, [trackerId]: "" }));
+        fetchTrackers();
+      }
+    } catch {
+      setNotification("Failed to update scope");
+    }
+  };
+
+  const handleRemoveScopeItem = async (trackerId, indexToRemove) => {
+    const currentTracker = trackers.find(
+      (t) => (t._id || t.trackingCode) === trackerId
+    );
+    const existingScope = currentTracker?.scope || [];
+    const updatedScope = existingScope.filter((_, i) => i !== indexToRemove);
+
+    try {
+      const res = await apiUpdateTrackerScope(trackerId, updatedScope);
+      if (res.success) {
+        setNotification("Scope feature removed");
+        fetchTrackers();
+      }
+    } catch {
+      setNotification("Failed to remove feature");
     }
   };
 
@@ -887,6 +935,72 @@ const AdminDashboard = () => {
                       </div>
                     </div>
 
+                    {/* Agreed Project Scope & Features Deliverables Manager */}
+                    <div className="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                          <HiShieldCheck className="text-purple-500 text-sm" />
+                          Agreed Project Scope & Features ({t.scope?.length || 0})
+                        </h4>
+                        <span className="text-[11px] text-slate-400">
+                          Clear deliverables list (Prevents scope confusion & extra unpaid requests)
+                        </span>
+                      </div>
+
+                      {/* Scope feature tags */}
+                      <div className="flex flex-wrap gap-2">
+                        {t.scope && t.scope.length > 0 ? (
+                          t.scope.map((item, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-300 text-xs font-semibold"
+                            >
+                              <HiCheckCircle className="text-cyan-500 text-sm flex-shrink-0" />
+                              <span>{item}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveScopeItem(trackerId, idx)}
+                                className="ml-1 text-slate-400 hover:text-red-500 transition cursor-pointer p-0.5"
+                                title="Remove Feature"
+                              >
+                                <HiX className="text-xs" />
+                              </button>
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-xs text-slate-400 italic">No scope deliverables added yet. Add below!</span>
+                        )}
+                      </div>
+
+                      {/* Add new Scope item form */}
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleAddScopeItem(trackerId);
+                        }}
+                        className="flex items-center gap-2 pt-1"
+                      >
+                        <input
+                          type="text"
+                          placeholder="Add new agreed feature (e.g. Razorpay Payment Gateway, Admin Dashboard, Coupon Engine)"
+                          value={newScopeItem[trackerId] || ""}
+                          onChange={(e) =>
+                            setNewScopeItem((prev) => ({
+                              ...prev,
+                              [trackerId]: e.target.value,
+                            }))
+                          }
+                          className="flex-1 text-xs p-2.5 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 outline-none"
+                        />
+                        <button
+                          type="submit"
+                          className="px-4 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition cursor-pointer whitespace-nowrap"
+                        >
+                          + Add Feature
+                        </button>
+                      </form>
+                    </div>
+
                     {/* Quick Activity Log Poster */}
                     <div className="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
@@ -1375,6 +1489,18 @@ const AdminDashboard = () => {
                   onChange={(e) => setTrackerForm({ ...trackerForm, estimatedDelivery: e.target.value })}
                   className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
                 />
+              </div>
+
+              <div>
+                <label className="font-bold text-xs">Agreed Scope & Deliverables (Comma-separated)</label>
+                <textarea
+                  rows="2"
+                  placeholder="e.g. Product Catalog, Cart Checkout, Razorpay Payment Gateway, Admin Dashboard, Responsive Mobile UI"
+                  value={trackerForm.scope}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, scope: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1 text-xs"
+                ></textarea>
+                <span className="text-[10px] text-slate-400">Separate each feature with a comma</span>
               </div>
 
               <div>

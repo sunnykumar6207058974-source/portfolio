@@ -143,6 +143,10 @@ export const apiAddTrackerLog = (id, logData) =>
 export const apiUpdateTrackerMilestones = (id, milestones) =>
   fetchAPI(`/tracker/${id}/milestones`, { method: "PUT", body: { milestones } });
 
+export const apiUpdateTrackerScope = (id, scope) =>
+  fetchAPI(`/tracker/${id}/scope`, { method: "PUT", body: { scope } });
+
 export const apiDeleteTracker = (id) =>
   fetchAPI(`/tracker/${id}`, { method: "DELETE" });
+
 
