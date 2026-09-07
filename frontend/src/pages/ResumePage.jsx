@@ -22,7 +22,7 @@ const ResumePage = () => {
     location: "India",
     portfolioUrl: "https://portfolio-iota-six-26.vercel.app",
     githubUrl: "https://github.com/sunnykumar6207058974-source",
-    bio: "Innovative Full-Stack Web Developer & Software Engineer with expertise in building modern, scalable web applications, Artificial Intelligence & Machine Learning integrations, and high-impact digital media.",
+    bio: "Results-driven Full-Stack Web Developer and Software Engineer specializing in scalable MERN architectures, Artificial Intelligence & Machine Learning integrations, and high-impact digital media.",
     resumeUrl: "/Sunny_Kumar_Resume.pdf",
   });
 
@@ -202,13 +202,9 @@ const ResumePage = () => {
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
               Professional Summary
             </h3>
-            <ul className="space-y-2 text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed list-disc list-inside">
-              <li>Innovative Full-Stack Web Developer with expertise in architecting high-performance, scalable web applications.</li>
-              <li>Proficient in engineering end-to-end modern software using React.js, Node.js, Express.js, and MongoDB.</li>
-              <li>Hands-on experience in Artificial Intelligence & Machine Learning, integrating Python pipelines, predictive models, and generative AI APIs.</li>
-              <li>Skilled in building secure RESTful APIs, responsive UI/UX design, database optimization, and cloud deployment on Vercel & Render.</li>
-              <li>Proven ability to combine technical software craftsmanship with creative video editing to deliver impactful, high-retention digital experiences.</li>
-            </ul>
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed font-medium">
+              Results-driven Full-Stack Web Developer and Software Engineer specializing in scalable MERN architectures, Artificial Intelligence & Machine Learning integrations, and high-impact digital media.
+            </p>
           </div>
 
           {/* Skills Breakdown */}
