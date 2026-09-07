@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
+import trackerRoutes from "./routes/trackerRoutes.js";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/tracker", trackerRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -67,5 +69,6 @@ app.listen(PORT, () => {
   console.log(`🔑 Auth API: http://localhost:${PORT}/api/auth`);
   console.log(`📩 Contact API: http://localhost:${PORT}/api/contact`);
   console.log(`💻 Projects API: http://localhost:${PORT}/api/projects`);
+  console.log(`📊 Tracker API: http://localhost:${PORT}/api/tracker`);
   console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
 });

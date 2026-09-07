@@ -125,3 +125,24 @@ export const apiGetSiteConfig = () => fetchAPI("/config");
 
 export const apiUpdateSiteConfig = (configData) =>
   fetchAPI("/config", { method: "PUT", body: configData });
+
+/* ==================== CLIENT PROJECT TRACKER API ==================== */
+export const apiGetTrackerByCode = (code) => fetchAPI(`/tracker/${code}`);
+
+export const apiGetAllTrackers = () => fetchAPI("/tracker");
+
+export const apiCreateTracker = (trackerData) =>
+  fetchAPI("/tracker", { method: "POST", body: trackerData });
+
+export const apiUpdateTrackerProgress = (id, progressData) =>
+  fetchAPI(`/tracker/${id}/progress`, { method: "PUT", body: progressData });
+
+export const apiAddTrackerLog = (id, logData) =>
+  fetchAPI(`/tracker/${id}/log`, { method: "POST", body: logData });
+
+export const apiUpdateTrackerMilestones = (id, milestones) =>
+  fetchAPI(`/tracker/${id}/milestones`, { method: "PUT", body: { milestones } });
+
+export const apiDeleteTracker = (id) =>
+  fetchAPI(`/tracker/${id}`, { method: "DELETE" });
+

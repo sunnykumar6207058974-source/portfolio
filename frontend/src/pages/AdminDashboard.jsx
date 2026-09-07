@@ -21,6 +21,11 @@ import {
   HiDeviceTablet,
   HiTrendingUp,
   HiChartBar,
+  HiShieldCheck,
+  HiExternalLink,
+  HiClipboardCopy,
+  HiChatAlt2,
+  HiAdjustments,
 } from "react-icons/hi";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -32,6 +37,11 @@ import {
   apiCreateService,
   apiCreateSkill,
   apiDeleteContactMessage,
+  apiGetAllTrackers,
+  apiCreateTracker,
+  apiUpdateTrackerProgress,
+  apiAddTrackerLog,
+  apiDeleteTracker,
 } from "../services/api";
 
 const AdminDashboard = () => {
@@ -77,6 +87,22 @@ const AdminDashboard = () => {
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [showSkillModal, setShowSkillModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showTrackerModal, setShowTrackerModal] = useState(false);
+
+  // Trackers State
+  const [trackers, setTrackers] = useState([]);
+  const [trackerForm, setTrackerForm] = useState({
+    clientName: "",
+    clientEmail: "",
+    projectName: "",
+    trackingCode: "",
+    progress: 25,
+    status: "In Progress",
+    currentPhase: "Phase 1: Architecture & UI Setup",
+    estimatedDelivery: "2 Weeks",
+    livePreviewUrl: "",
+  });
+  const [quickLogs, setQuickLogs] = useState({});
 
   // Forms State
   const [projectForm, setProjectForm] = useState({
@@ -164,7 +190,112 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    fetchTrackers();
   }, []);
+
+  const fetchTrackers = async () => {
+    try {
+      const res = await apiGetAllTrackers();
+      if (res.success && res.data) {
+        setTrackers(res.data);
+      }
+    } catch {
+      // Keep empty fallback
+    }
+  };
+
+  const handleCreateTracker = async (e) => {
+    e.preventDefault();
+    if (!trackerForm.clientName || !trackerForm.projectName || !trackerForm.trackingCode) {
+      alert("Please fill client name, project name, and tracking code");
+      return;
+    }
+    try {
+      const res = await apiCreateTracker(trackerForm);
+      if (res.success) {
+        setNotification(`Tracker for "${trackerForm.projectName}" created!`);
+        setShowTrackerModal(false);
+        setTrackerForm({
+          clientName: "",
+          clientEmail: "",
+          projectName: "",
+          trackingCode: "",
+          progress: 25,
+          status: "In Progress",
+          currentPhase: "Phase 1: Architecture & UI Setup",
+          estimatedDelivery: "2 Weeks",
+          livePreviewUrl: "",
+        });
+        fetchTrackers();
+      } else {
+        setNotification(res.error || "Failed to create tracker");
+      }
+    } catch {
+      setNotification("Failed to create tracker");
+    }
+  };
+
+  const handleUpdateTrackerProgress = async (id, progress, status, currentPhase) => {
+    try {
+      const res = await apiUpdateTrackerProgress(id, { progress, status, currentPhase });
+      if (res.success) {
+        setNotification(`Updated progress to ${progress}%!`);
+        fetchTrackers();
+      } else {
+        setNotification(res.error || "Update failed");
+      }
+    } catch {
+      setNotification("Update failed");
+    }
+  };
+
+  const handlePostTrackerLog = async (trackerId) => {
+    const logData = quickLogs[trackerId];
+    if (!logData || !logData.title) {
+      alert("Please enter update title");
+      return;
+    }
+    try {
+      const res = await apiAddTrackerLog(trackerId, logData);
+      if (res.success) {
+        setNotification(`New update logged: "${logData.title}"!`);
+        setQuickLogs((prev) => ({
+          ...prev,
+          [trackerId]: { title: "", tag: "Feature", description: "" },
+        }));
+        fetchTrackers();
+      } else {
+        setNotification(res.error || "Failed to log update");
+      }
+    } catch {
+      setNotification("Failed to log update");
+    }
+  };
+
+  const handleDeleteTrackerItem = async (id, name) => {
+    if (!confirm(`Are you sure you want to delete tracker for "${name}"?`)) return;
+    try {
+      const res = await apiDeleteTracker(id);
+      if (res.success) {
+        setNotification(`Tracker for "${name}" deleted`);
+        fetchTrackers();
+      }
+    } catch {
+      setNotification("Delete failed");
+    }
+  };
+
+  const handleCopyLink = (code) => {
+    const url = `${window.location.origin}/track/${code}`;
+    navigator.clipboard.writeText(url);
+    setNotification(`Copied link to clipboard: ${url}`);
+  };
+
+  const handleShareWhatsApp = (t) => {
+    const url = `${window.location.origin}/track/${t.trackingCode}`;
+    const msg = `Hi ${t.clientName}! 👋 Here is your live project progress update for "${t.projectName}":\n\n📊 Status: ${t.progress}% Completed (${t.currentPhase})\n🔗 Track Live: ${url}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+  };
 
   const handleAddProject = async (e) => {
     e.preventDefault();
@@ -508,7 +639,15 @@ const AdminDashboard = () => {
             Quick Admin Action Controls
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
+            <button
+              onClick={() => setShowTrackerModal(true)}
+              className="p-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-cyan-500 rounded-2xl text-xs font-bold flex flex-col items-center gap-2 transition cursor-pointer"
+            >
+              <HiShieldCheck className="text-xl text-cyan-400" />
+              <span>Client Tracker</span>
+            </button>
+
             <button
               onClick={() => setShowProjectModal(true)}
               className="p-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-cyan-500 rounded-2xl text-xs font-bold flex flex-col items-center gap-2 transition cursor-pointer"
@@ -557,6 +696,252 @@ const AdminDashboard = () => {
               <span>SEO Settings</span>
             </button>
           </div>
+        </div>
+
+        {/* Client Project Work Trackers Section */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-cyan-500 font-bold text-xs uppercase tracking-wider">
+                <HiShieldCheck className="text-lg" />
+                <span>Client Transparency Engine</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black mt-1">
+                Client Project Work Trackers ({trackers.length})
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Update progress % (20%, 40%, 75%), manage milestones, and log daily feature additions for clients
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowTrackerModal(true)}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold flex items-center gap-2 hover:opacity-90 transition cursor-pointer"
+            >
+              <HiPlus className="text-base" />
+              <span>Create Client Tracker</span>
+            </button>
+          </div>
+
+          {trackers.length === 0 ? (
+            <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950 text-center text-xs text-slate-500 border border-slate-200 dark:border-slate-800">
+              No active client trackers yet. Click "Create Client Tracker" above to set up a project.
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {trackers.map((t) => {
+                const trackerId = t._id || t.trackingCode;
+                const quickLog = quickLogs[trackerId] || { title: "", tag: "Feature", description: "" };
+
+                return (
+                  <div
+                    key={trackerId}
+                    className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-5"
+                  >
+                    {/* Top Row: Title, Code & Actions */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md font-mono text-xs font-bold bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">
+                            {t.trackingCode}
+                          </span>
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                            {t.status}
+                          </span>
+                        </div>
+                        <h3 className="font-extrabold text-base sm:text-lg mt-1 text-slate-900 dark:text-white">
+                          {t.projectName}
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                          Client: <strong className="text-slate-700 dark:text-slate-300">{t.clientName}</strong>
+                          {t.clientEmail && ` • ${t.clientEmail}`}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <a
+                          href={`/track/${t.trackingCode}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:text-cyan-500 transition"
+                        >
+                          <HiExternalLink />
+                          <span>Client View</span>
+                        </a>
+
+                        <button
+                          onClick={() => handleCopyLink(t.trackingCode)}
+                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 hover:text-cyan-500 transition cursor-pointer"
+                        >
+                          <HiClipboardCopy />
+                          <span>Copy Link</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleShareWhatsApp(t)}
+                          className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 hover:bg-emerald-500/20 transition cursor-pointer"
+                        >
+                          <HiChatAlt2 />
+                          <span>WhatsApp</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteTrackerItem(trackerId, t.projectName)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 transition cursor-pointer"
+                          title="Delete Tracker"
+                        >
+                          <HiTrash className="text-base" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Progress Slider & Status Controller */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-white dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                      <div className="md:col-span-5 space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-slate-700 dark:text-slate-300">Live Progress:</span>
+                          <span className="font-black text-cyan-500 font-mono text-sm">{t.progress}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          step="5"
+                          value={t.progress}
+                          onChange={(e) => {
+                            const newP = Number(e.target.value);
+                            setTrackers((prev) =>
+                              prev.map((item) =>
+                                (item._id || item.trackingCode) === trackerId ? { ...item, progress: newP } : item
+                              )
+                            );
+                          }}
+                          className="w-full accent-cyan-500 cursor-pointer"
+                        />
+                      </div>
+
+                      <div className="md:col-span-4">
+                        <label className="text-[11px] font-bold text-slate-500 block mb-1">Current Focus / Phase:</label>
+                        <input
+                          type="text"
+                          value={t.currentPhase || ""}
+                          onChange={(e) => {
+                            const newPhase = e.target.value;
+                            setTrackers((prev) =>
+                              prev.map((item) =>
+                                (item._id || item.trackingCode) === trackerId ? { ...item, currentPhase: newPhase } : item
+                              )
+                            );
+                          }}
+                          className="w-full text-xs p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 outline-none"
+                          placeholder="e.g. Phase 3: Payment Integration"
+                        />
+                      </div>
+
+                      <div className="md:col-span-3 flex items-end gap-2">
+                        <div className="flex-1">
+                          <label className="text-[11px] font-bold text-slate-500 block mb-1">Status:</label>
+                          <select
+                            value={t.status || "In Progress"}
+                            onChange={(e) => {
+                              const newStatus = e.target.value;
+                              setTrackers((prev) =>
+                                prev.map((item) =>
+                                  (item._id || item.trackingCode) === trackerId ? { ...item, status: newStatus } : item
+                                )
+                              );
+                            }}
+                            className="w-full text-xs p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 outline-none"
+                          >
+                            <option value="Planning">Planning</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Testing / QA">Testing / QA</option>
+                            <option value="Completed">Completed</option>
+                          </select>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateTrackerProgress(trackerId, t.progress, t.status, t.currentPhase)}
+                          className="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold transition cursor-pointer whitespace-nowrap"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Quick Activity Log Poster */}
+                    <div className="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <HiSparkles className="text-amber-500" />
+                        Log Daily Work Update (What was added)
+                      </h4>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                        <div className="sm:col-span-6">
+                          <input
+                            type="text"
+                            placeholder="Update Title (e.g. Added Razorpay Checkout Modal)"
+                            value={quickLog.title || ""}
+                            onChange={(e) =>
+                              setQuickLogs((prev) => ({
+                                ...prev,
+                                [trackerId]: { ...quickLog, title: e.target.value },
+                              }))
+                            }
+                            className="w-full text-xs p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 outline-none"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-3">
+                          <select
+                            value={quickLog.tag || "Feature"}
+                            onChange={(e) =>
+                              setQuickLogs((prev) => ({
+                                ...prev,
+                                [trackerId]: { ...quickLog, tag: e.target.value },
+                              }))
+                            }
+                            className="w-full text-xs p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 outline-none"
+                          >
+                            <option value="Feature">Feature</option>
+                            <option value="UI / Design">UI / Design</option>
+                            <option value="Payment">Payment</option>
+                            <option value="Bug Fix">Bug Fix</option>
+                            <option value="Database">Database</option>
+                            <option value="Deployment">Deployment</option>
+                          </select>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                          <button
+                            type="button"
+                            onClick={() => handlePostTrackerLog(trackerId)}
+                            className="w-full py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition cursor-pointer"
+                          >
+                            Post Update
+                          </button>
+                        </div>
+                      </div>
+
+                      <input
+                        type="text"
+                        placeholder="Optional description / details of what was completed"
+                        value={quickLog.description || ""}
+                        onChange={(e) =>
+                          setQuickLogs((prev) => ({
+                            ...prev,
+                            [trackerId]: { ...quickLog, description: e.target.value },
+                          }))
+                        }
+                        className="w-full text-xs p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 outline-none"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Dashboard Split Views */}
@@ -875,6 +1260,131 @@ const AdminDashboard = () => {
               <div className="flex gap-2 justify-end pt-2">
                 <button type="button" onClick={() => setShowSettingsModal(false)} className="px-4 py-2 rounded-xl border cursor-pointer text-xs font-semibold">Cancel</button>
                 <button type="submit" className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-slate-950 font-bold rounded-xl cursor-pointer text-xs">Save Settings</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 5: Create Client Project Tracker Modal */}
+      {showTrackerModal && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-lg w-full space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center gap-2 text-cyan-500 font-bold text-xs uppercase">
+              <HiShieldCheck className="text-xl" />
+              <span>Create Client Live Portal</span>
+            </div>
+            <h3 className="text-xl font-bold">New Client Project Tracker</h3>
+
+            <form onSubmit={handleCreateTracker} className="space-y-3 text-xs sm:text-sm">
+              <div>
+                <label className="font-bold text-xs">Client Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Alex Johnson"
+                  value={trackerForm.clientName}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, clientName: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-xs">Client Email (Optional)</label>
+                <input
+                  type="email"
+                  placeholder="e.g. alex@example.com"
+                  value={trackerForm.clientEmail}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, clientEmail: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-xs">Project Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. UrbanThread Luxe E-Commerce"
+                  value={trackerForm.projectName}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, projectName: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-xs">Tracking Code (Passcode) *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. UT-2026"
+                    value={trackerForm.trackingCode}
+                    onChange={(e) => setTrackerForm({ ...trackerForm, trackingCode: e.target.value.toUpperCase() })}
+                    className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1 font-mono uppercase"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-bold text-xs">Initial Progress %</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={trackerForm.progress}
+                    onChange={(e) => setTrackerForm({ ...trackerForm, progress: e.target.value })}
+                    className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1 font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-xs">Current Phase / Focus</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Phase 1: Architecture & UI Setup"
+                  value={trackerForm.currentPhase}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, currentPhase: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-xs">Estimated Delivery Window</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 15 Sep 2026 (2 Weeks)"
+                  value={trackerForm.estimatedDelivery}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, estimatedDelivery: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-xs">Live Staging / Preview URL</label>
+                <input
+                  type="url"
+                  placeholder="https://urban-thread-sand.vercel.app"
+                  value={trackerForm.livePreviewUrl}
+                  onChange={(e) => setTrackerForm({ ...trackerForm, livePreviewUrl: e.target.value })}
+                  className="w-full bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-300 dark:border-slate-800 outline-none mt-1"
+                />
+              </div>
+
+              <div className="flex gap-2 justify-end pt-3">
+                <button
+                  type="button"
+                  onClick={() => setShowTrackerModal(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 cursor-pointer font-semibold text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl cursor-pointer text-xs shadow-lg"
+                >
+                  Create & Launch Tracker
+                </button>
               </div>
             </form>
           </div>

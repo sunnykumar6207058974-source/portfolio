@@ -15,6 +15,7 @@ import {
   HiMail,
   HiDocumentText,
   HiSparkles,
+  HiLightningBolt,
 } from "react-icons/hi";
 import { useTheme } from "../context/ThemeContext";
 import { fetchSiteConfig, resolveResumeUrl } from "../utils/resume";
@@ -53,6 +54,7 @@ const Navbar = () => {
     { name: "Skills", path: "/skills", icon: HiCode },
     { name: "Services", path: "/services", icon: HiCog },
     { name: "Projects", path: "/projects", icon: HiFolder },
+    { name: "Live Tracker", path: "/track", icon: HiLightningBolt },
     { name: "Resume", path: "/resume", icon: HiDocumentText },
     { name: "Contact", path: "/contact", icon: HiMail },
     { name: "Admin", path: "/admin", icon: HiSparkles },

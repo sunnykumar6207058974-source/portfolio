@@ -21,6 +21,7 @@ import ProjectsPage from "./pages/ProjectsPage";
 import ContactPage from "./pages/ContactPage";
 import ResumePage from "./pages/ResumePage";
 import AdminDashboard from "./pages/AdminDashboard";
+import ClientTrackerPage from "./pages/ClientTrackerPage";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +50,8 @@ function App() {
                   <Route path="/projects" element={<ProjectsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/resume" element={<ResumePage />} />
+                  <Route path="/track" element={<ClientTrackerPage />} />
+                  <Route path="/track/:trackingCode" element={<ClientTrackerPage />} />
                   <Route
                     path="/admin"
                     element={
