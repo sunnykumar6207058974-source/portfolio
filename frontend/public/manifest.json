@@ -1,0 +1,24 @@
+{
+  "name": "PixelForge | Sunny Kumar",
+  "short_name": "PixelForge",
+  "description": "Sunny Kumar - Full-Stack Developer & Live Client Work Tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/profile.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
