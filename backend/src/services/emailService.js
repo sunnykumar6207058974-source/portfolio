@@ -1,35 +1,27 @@
 import nodemailer from "nodemailer";
 
-let cachedTransporter = null;
+export const createEmailTransporter = () => {
+  const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
+  const pass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "bcibwpuyobqxptot").replace(/\s+/g, "");
 
-export const getTransporter = () => {
-  if (!cachedTransporter) {
-    const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
-    const pass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "bcibwpuyobqxptot").replace(/\s+/g, "");
-
-    cachedTransporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      pool: true,
-      maxConnections: 5,
-      maxMessages: 100,
-      auth: {
-        user,
-        pass,
-      },
-      connectionTimeout: 8000,
-      greetingTimeout: 8000,
-      socketTimeout: 8000,
-    });
-  }
-  return cachedTransporter;
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user,
+      pass,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
 };
 
 export const sendEmailNotification = async ({ to, subject, html, text }) => {
   try {
     const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
-    const transporter = getTransporter();
+    const transporter = createEmailTransporter();
 
     const mailOptions = {
       from: `"${process.env.FROM_NAME || "PixelForge Portfolio"}" <${user}>`,
@@ -51,7 +43,7 @@ export const sendEmailNotification = async ({ to, subject, html, text }) => {
 export const sendWelcomeEmailToClient = async ({ name, email, subject, message }) => {
   try {
     const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
-    const transporter = getTransporter();
+    const transporter = createEmailTransporter();
 
     const safeName = name || "there";
     const safeSubject = subject || "Project Inquiry";
