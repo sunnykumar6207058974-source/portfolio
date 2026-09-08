@@ -24,6 +24,25 @@ const Contact = () => {
     setStatus({ loading: true, success: null, message: "" });
 
     try {
+      // Direct browser HTTPS email dispatch (bypasses any cloud firewall/SMTP blocks)
+      fetch("https://formsubmit.co/ajax/sunnykumar6207058974@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          _subject: `[PixelForge Inquiry] ${formData.subject} from ${formData.name}`,
+          _replyto: formData.email,
+          _captcha: "false",
+          _template: "table",
+        }),
+      }).catch((e) => console.warn("Browser direct email dispatch:", e));
+
       const result = await apiSubmitContact(formData);
 
       if (result.success) {

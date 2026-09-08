@@ -74,7 +74,10 @@ export const submitContactForm = async (req, res) => {
       const results = await Promise.allSettled([
         sendEmailNotification({
           to: process.env.EMAIL_USER || "sunnykumar6207058974@gmail.com",
+          name,
+          email,
           subject: `[PixelForge Contact] ${subject} from ${name}`,
+          message,
           text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
           html: `
             <h2>📩 New Contact Message Received</h2>

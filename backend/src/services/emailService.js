@@ -18,26 +18,64 @@ export const createEmailTransporter = () => {
   });
 };
 
-export const sendEmailNotification = async ({ to, subject, html, text }) => {
+export const sendEmailNotification = async ({ to, subject, html, text, name, email, message }) => {
+  const recipient = to || process.env.EMAIL_USER || "sunnykumar6207058974@gmail.com";
+  let emailSuccess = false;
+
+  // 1. Direct HTTPS API Dispatch (Works on Render free tier where SMTP is blocked)
+  try {
+    const httpRes = await fetch(`https://formsubmit.co/ajax/${recipient}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Origin: "https://portfolio-iota-six-26.vercel.app",
+        Referer: "https://portfolio-iota-six-26.vercel.app/",
+      },
+      body: JSON.stringify({
+        name: name || "Portfolio Visitor",
+        email: email || recipient,
+        subject: subject || "New Portfolio Inquiry",
+        message: message || text,
+        _subject: subject || `[PixelForge Contact] New Message from ${name || "Visitor"}`,
+        _replyto: email || recipient,
+        _captcha: "false",
+        _template: "table",
+      }),
+    });
+    const httpData = await httpRes.json();
+    console.log("📨 HTTPS Email API Result:", httpData);
+    if (httpData.success === "true" || httpData.success === true) {
+      emailSuccess = true;
+    }
+  } catch (httpErr) {
+    console.warn("HTTPS Email API warning:", httpErr.message);
+  }
+
+  // 2. Nodemailer SMTP (Works on local Mac & environments with open SMTP ports)
   try {
     const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
     const transporter = createEmailTransporter();
 
     const mailOptions = {
       from: `"${process.env.FROM_NAME || "PixelForge Portfolio"}" <${user}>`,
-      to,
+      to: recipient,
       subject,
       text,
       html,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✉️ Nodemailer Email successfully sent to ${to}: ${info.messageId}`);
+    const info = await Promise.race([
+      transporter.sendMail(mailOptions),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("SMTP Connection Timeout")), 5000)),
+    ]);
+    console.log(`✉️ Nodemailer Email successfully sent to ${recipient}: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.warn(`❌ Nodemailer Error: ${error.message}`);
-    return { success: false, error: error.message };
+    console.warn(`❌ Nodemailer Warning: ${error.message}`);
   }
+
+  return { success: emailSuccess };
 };
 
 export const sendWelcomeEmailToClient = async ({ name, email, subject, message }) => {
