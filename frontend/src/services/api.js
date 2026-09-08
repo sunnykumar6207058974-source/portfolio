@@ -112,8 +112,27 @@ export const apiDeleteSkill = (id) =>
   fetchAPI(`/skills/${id}`, { method: "DELETE" });
 
 /* ==================== CONTACT MESSAGES API ==================== */
-export const apiSubmitContact = (contactData) =>
-  fetchAPI("/contact", { method: "POST", body: contactData });
+export const apiSubmitContact = async (contactData) => {
+  // On live Vercel site, call Vercel Serverless Function (where SMTP port 465 is open)
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactData),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, ...data };
+      }
+    } catch (err) {
+      console.warn("Vercel contact serverless fallback to backend:", err);
+    }
+  }
+
+  // Local development fallback
+  return fetchAPI("/contact", { method: "POST", body: contactData });
+};
 
 export const apiGetContactMessages = () => fetchAPI("/contact");
 
