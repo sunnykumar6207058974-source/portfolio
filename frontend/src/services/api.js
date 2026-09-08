@@ -8,7 +8,7 @@ const API_BASE_URL =
  * Universal Fetch Helper for PixelForge API
  */
 export const fetchAPI = async (endpoint, options = {}) => {
-  const { method = "GET", body = null, token = null, headers = {} } = options;
+  const { method = "GET", body = null, token = null, headers = {}, timeout = 12000 } = options;
 
   const authToken = token || localStorage.getItem("pixelforge_accessToken");
 
@@ -21,9 +21,13 @@ export const fetchAPI = async (endpoint, options = {}) => {
     reqHeaders["Authorization"] = `Bearer ${authToken}`;
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
   const config = {
     method,
     headers: reqHeaders,
+    signal: controller.signal,
   };
 
   if (body) {
@@ -33,6 +37,7 @@ export const fetchAPI = async (endpoint, options = {}) => {
   try {
     const url = endpoint.startsWith("http") ? endpoint : `${API_BASE_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
     const response = await fetch(url, config);
+    clearTimeout(timeoutId);
 
     let data;
     try {
@@ -56,9 +61,12 @@ export const fetchAPI = async (endpoint, options = {}) => {
       ...data,
     };
   } catch (err) {
+    clearTimeout(timeoutId);
     return {
       success: false,
-      error: err.message || "Network Error: Unable to connect to backend server.",
+      error: err.name === "AbortError" 
+        ? "Request timed out. Please try again." 
+        : (err.message || "Network Error: Unable to connect to backend server."),
       data: null,
     };
   }

@@ -62,37 +62,41 @@ export const submitContactForm = async (req, res) => {
 
     console.log(`📩 New Contact Submission from ${name} (${email})`);
 
-    // Trigger Nodemailer email notification
-    try {
-      await sendEmailNotification({
-        to: process.env.EMAIL_USER || "sunnykumar6207058974@gmail.com",
-        subject: `[PixelForge Contact] ${subject} from ${name}`,
-        text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
-        html: `
-          <h2>📩 New Contact Message Received</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Subject:</strong> ${subject}</p>
-          <p><strong>Message:</strong></p>
-          <blockquote style="background: #f1f5f9; padding: 12px; border-left: 4px solid #06b6d4;">${message}</blockquote>
-        `,
-      });
-    } catch (err) {
-      console.warn("Email alert notification warning:", err.message);
-    }
-
-    // Trigger Welcoming Auto-Reply Email to the Client
-    try {
-      await sendWelcomeEmailToClient({ name, email, subject, message });
-    } catch (clientErr) {
-      console.warn("Client welcome auto-reply notice:", clientErr.message);
-    }
-
-    return res.status(201).json({
+    // Return instant success response so user's client does not hang
+    res.status(201).json({
       success: true,
       message: "Thank you! Your message has been sent successfully to Sunny. He will get back to you shortly.",
       data: savedContact,
     });
+
+    // Fire-and-forget background email notification (never blocks client HTTP response)
+    (async () => {
+      try {
+        await sendEmailNotification({
+          to: process.env.EMAIL_USER || "sunnykumar6207058974@gmail.com",
+          subject: `[PixelForge Contact] ${subject} from ${name}`,
+          text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+          html: `
+            <h2>📩 New Contact Message Received</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Message:</strong></p>
+            <blockquote style="background: #f1f5f9; padding: 12px; border-left: 4px solid #06b6d4;">${message}</blockquote>
+          `,
+        });
+      } catch (err) {
+        console.warn("Email alert notification warning:", err.message);
+      }
+
+      try {
+        await sendWelcomeEmailToClient({ name, email, subject, message });
+      } catch (clientErr) {
+        console.warn("Client welcome auto-reply notice:", clientErr.message);
+      }
+    })().catch((bgErr) => console.warn("Background email error:", bgErr));
+
+    return;
   } catch (error) {
     console.error("Error in submitContactForm:", error);
     return res.status(500).json({
