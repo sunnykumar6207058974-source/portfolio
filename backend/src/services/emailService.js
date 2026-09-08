@@ -1,25 +1,35 @@
 import nodemailer from "nodemailer";
 
-export const sendEmailNotification = async ({ to, subject, html, text }) => {
-  try {
+let cachedTransporter = null;
+
+export const getTransporter = () => {
+  if (!cachedTransporter) {
     const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
-    const pass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "").replace(/\s+/g, "");
+    const pass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "bcibwpuyobqxptot").replace(/\s+/g, "");
 
-    if (!pass) {
-      console.warn("⚠️ SMTP password not configured in environment. Skipping email alert.");
-      return { success: false, error: "SMTP not configured" };
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
+    cachedTransporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      pool: true,
+      maxConnections: 5,
+      maxMessages: 100,
       auth: {
         user,
         pass,
       },
-      connectionTimeout: 4000,
-      greetingTimeout: 4000,
-      socketTimeout: 4000,
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 8000,
     });
+  }
+  return cachedTransporter;
+};
+
+export const sendEmailNotification = async ({ to, subject, html, text }) => {
+  try {
+    const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
+    const transporter = getTransporter();
 
     const mailOptions = {
       from: `"${process.env.FROM_NAME || "PixelForge Portfolio"}" <${user}>`,
@@ -41,23 +51,7 @@ export const sendEmailNotification = async ({ to, subject, html, text }) => {
 export const sendWelcomeEmailToClient = async ({ name, email, subject, message }) => {
   try {
     const user = process.env.EMAIL_USER || process.env.SMTP_USER || "sunnykumar6207058974@gmail.com";
-    const pass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "").replace(/\s+/g, "");
-
-    if (!pass) {
-      console.warn("⚠️ SMTP password not configured in environment. Skipping client welcome email.");
-      return { success: false, error: "SMTP not configured" };
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user,
-        pass,
-      },
-      connectionTimeout: 4000,
-      greetingTimeout: 4000,
-      socketTimeout: 4000,
-    });
+    const transporter = getTransporter();
 
     const safeName = name || "there";
     const safeSubject = subject || "Project Inquiry";

@@ -47,8 +47,8 @@ router.post("/", contactValidationRules, validateRequest, async (req, res) => {
 
     // Fire-and-forget background email notification (never blocks client HTTP response)
     (async () => {
-      try {
-        await sendEmail({
+      const results = await Promise.allSettled([
+        sendEmail({
           to: process.env.EMAIL_USER || "sunnykumar6207058974@gmail.com",
           subject: `[PixelForge Contact] ${subject} from ${name}`,
           text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
@@ -60,16 +60,14 @@ router.post("/", contactValidationRules, validateRequest, async (req, res) => {
             <p><strong>Message:</strong></p>
             <blockquote style="background: #f1f5f9; padding: 12px; border-left: 4px solid #06b6d4;">${message}</blockquote>
           `,
-        });
-      } catch (err) {
-        console.warn("Email alert notification warning:", err.message);
-      }
-
-      try {
-        await sendWelcomeEmailToClient({ name, email, subject, message });
-      } catch (clientErr) {
-        console.warn("Client welcome auto-reply notice:", clientErr.message);
-      }
+        }),
+        sendWelcomeEmailToClient({ name, email, subject, message }),
+      ]);
+      results.forEach((r, idx) => {
+        if (r.status === "rejected") {
+          console.warn(`Email task ${idx} failed:`, r.reason);
+        }
+      });
     })().catch((bgErr) => console.warn("Background email error:", bgErr));
 
     return;
