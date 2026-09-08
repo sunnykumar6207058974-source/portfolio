@@ -15,7 +15,6 @@ import siteConfigRoutes from "./routes/siteConfigRoutes.js";
 import extraRoutes from "./routes/extraRoutes.js";
 import trackerRoutes from "../routes/trackerRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-import { sendEmailNotification } from "./services/emailService.js";
 
 const app = express();
 
@@ -101,16 +100,6 @@ const healthHandler = (req, res) => {
 };
 app.get("/api/health", healthHandler);
 app.get("/health", healthHandler);
-
-app.get("/api/test-email", async (req, res) => {
-  const result = await sendEmailNotification({
-    to: "sunnykumar6207058974@gmail.com",
-    subject: "Render Diagnostic Test Email",
-    text: "Testing email sending directly from Render environment.",
-    html: "<p>Testing email sending directly from Render environment.</p>",
-  });
-  res.json({ diagnostic: result });
-});
 
 // API Routes & Universal Dual-Mount Aliases (/api/... AND /...)
 app.use("/api/auth", authRoutes);
