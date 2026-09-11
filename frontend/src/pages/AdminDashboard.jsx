@@ -147,54 +147,65 @@ const AdminDashboard = () => {
   const [resumeFile, setResumeFile] = useState(null);
   const [uploadingResume, setUploadingResume] = useState(false);
 
-  const fetchDashboardData = async () => {
-    setLoading(true);
+  const fetchDashboardData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const result = await apiGetDashboardData();
       if (result.success) {
-        setData({
-          stats: result.stats || data.stats,
-          analytics: result.analytics || data.analytics,
+        setData((prev) => ({
+          ...prev,
+          stats: result.stats || prev.stats,
+          analytics: result.analytics || prev.analytics,
           recentMessages: result.recentMessages || [],
           latestProjects: result.latestProjects || [],
-        });
+        }));
+        setLastSynced(new Date().toLocaleTimeString());
       }
     } catch {
       // Keep default dashboard state
     }
 
-    try {
-      const configData = await apiGetSiteConfig();
-      if (configData.success && configData.data) {
-        const cfg = configData.data;
-        const wInfo = cfg.websiteInfo || {};
-        const sLinks = cfg.socialLinks || {};
-        const sSeo = cfg.seoSettings || {};
-        const hSec = cfg.heroSection || {};
-        setSettingsForm({
-          name: wInfo.name || hSec.name || "Sunny Kumar",
-          headline: wInfo.headline || hSec.headline || "Full-Stack Web Developer & Video Editor",
-          metaTitle: sSeo.metaTitle || "Sunny Kumar | Portfolio",
-          github: sLinks.github || "https://github.com/sunny",
-          linkedin: sLinks.linkedin || "https://linkedin.com/in/sunny",
-          email: wInfo.email || "sunnykumar6207058974@gmail.com",
-          phone: wInfo.phone || "+91 8340112045",
-          location: wInfo.location || "India",
-          bio: wInfo.bio || "Passionate developer building high-performance web apps.",
-          resumeUrl: wInfo.resumeUrl || "/Sunny_Kumar_Resume.pdf",
-        });
+    if (!silent) {
+      try {
+        const configData = await apiGetSiteConfig();
+        if (configData.success && configData.data) {
+          const cfg = configData.data;
+          const wInfo = cfg.websiteInfo || {};
+          const sLinks = cfg.socialLinks || {};
+          const sSeo = cfg.seoSettings || {};
+          const hSec = cfg.heroSection || {};
+          setSettingsForm({
+            name: wInfo.name || hSec.name || "Sunny Kumar",
+            headline: wInfo.headline || hSec.headline || "Full-Stack Web Developer & Video Editor",
+            metaTitle: sSeo.metaTitle || "Sunny Kumar | Portfolio",
+            github: sLinks.github || "https://github.com/sunny",
+            linkedin: sLinks.linkedin || "https://linkedin.com/in/sunny",
+            email: wInfo.email || "sunnykumar6207058974@gmail.com",
+            phone: wInfo.phone || "+91 8340112045",
+            location: wInfo.location || "India",
+            bio: wInfo.bio || "Passionate developer building high-performance web apps.",
+            resumeUrl: wInfo.resumeUrl || "/Sunny_Kumar_Resume.pdf",
+          });
+        }
+      } catch {
+        // Keep state fallback
+      } finally {
+        setLoading(false);
+        setTimeout(() => setNotification(""), 4000);
       }
-    } catch {
-      // Keep state fallback
-    } finally {
-      setLoading(false);
-      setTimeout(() => setNotification(""), 4000);
     }
   };
 
   useEffect(() => {
     fetchDashboardData();
     fetchTrackers();
+
+    // Auto live poll every 12 seconds
+    const interval = setInterval(() => {
+      fetchDashboardData(true);
+    }, 12000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchTrackers = async () => {
@@ -564,11 +575,11 @@ const AdminDashboard = () => {
   };
 
   const statCards = [
-    { title: "Total Visitors", value: data.analytics.totalVisitors.toLocaleString(), icon: <HiEye className="text-3xl text-emerald-500" />, bgColor: "bg-emerald-500/10 border-emerald-500/20", trend: "+18.4% this mo" },
-    { title: "Project Views", value: data.analytics.projectViews.toLocaleString(), icon: <HiChartBar className="text-3xl text-cyan-500" />, bgColor: "bg-cyan-500/10 border-cyan-500/20", trend: "+24.1% this mo" },
-    { title: "Contact Requests", value: data.analytics.contactRequests, icon: <HiMail className="text-3xl text-purple-500" />, bgColor: "bg-purple-500/10 border-purple-500/20", trend: "+15.0% this mo" },
-    { title: "Total Projects", value: data.stats.totalProjects, icon: <HiFolder className="text-3xl text-amber-500" />, bgColor: "bg-amber-500/10 border-amber-500/20", trend: "4 Live Drops" },
-    { title: "Total Services", value: data.stats.totalServices, icon: <HiCube className="text-3xl text-blue-500" />, bgColor: "bg-blue-500/10 border-blue-500/20", trend: "6 Offerings" },
+    { title: "Total Visitors", value: data.analytics.totalVisitors.toLocaleString(), icon: <HiEye className="text-3xl text-emerald-500" />, bgColor: "bg-emerald-500/10 border-emerald-500/20", trend: "Live Visitor Count" },
+    { title: "Project Views", value: data.analytics.projectViews.toLocaleString(), icon: <HiChartBar className="text-3xl text-cyan-500" />, bgColor: "bg-cyan-500/10 border-cyan-500/20", trend: "Live Project Views" },
+    { title: "Contact Requests", value: data.analytics.contactRequests, icon: <HiMail className="text-3xl text-purple-500" />, bgColor: "bg-purple-500/10 border-purple-500/20", trend: `${data.analytics.contactRequests} Real Messages` },
+    { title: "Total Projects", value: data.stats.totalProjects, icon: <HiFolder className="text-3xl text-amber-500" />, bgColor: "bg-amber-500/10 border-amber-500/20", trend: `${data.stats.totalProjects} In Database` },
+    { title: "Total Services", value: data.stats.totalServices, icon: <HiCube className="text-3xl text-blue-500" />, bgColor: "bg-blue-500/10 border-blue-500/20", trend: `${data.stats.totalServices} Live Services` },
   ];
 
   const maxViews = Math.max(...data.analytics.monthlyStats.map((m) => m.views));
@@ -592,13 +603,22 @@ const AdminDashboard = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            {/* Live Sync Status Badge */}
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold shadow-sm">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <span>LIVE SYNC {lastSynced ? `(${lastSynced})` : ""}</span>
+            </div>
+
             <button
-              onClick={fetchDashboardData}
+              onClick={() => fetchDashboardData(false)}
               disabled={loading}
-              className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition cursor-pointer"
+              className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
             >
               <HiRefresh className={`text-lg ${loading ? "animate-spin" : ""}`} />
-              <span>Sync</span>
+              <span>Refresh</span>
             </button>
 
             <button

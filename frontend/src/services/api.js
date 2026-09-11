@@ -176,4 +176,6 @@ export const apiUpdateTrackerScope = (id, scope) =>
 export const apiDeleteTracker = (id) =>
   fetchAPI(`/tracker/${id}`, { method: "DELETE" });
 
-
+/* ==================== LIVE ANALYTICS TRACKING API ==================== */
+export const apiTrackAnalytics = (eventData) =>
+  fetchAPI("/analytics/track", { method: "POST", body: eventData });

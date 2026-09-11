@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -11,6 +11,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { trackPageView } from "./utils/analytics";
 
 // Pages
 import Home from "./pages/Home";
@@ -25,6 +26,10 @@ import ClientTrackerPage from "./pages/ClientTrackerPage";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    trackPageView();
+  }, []);
 
   return (
     <ThemeProvider>

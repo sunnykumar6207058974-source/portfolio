@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiX, HiPlay, HiExternalLink, HiCode, HiSparkles, HiRefresh } from "react-icons/hi";
 import { apiGetProjects } from "../services/api";
+import { trackProjectView } from "../utils/analytics";
 
 import cartifyImg from "../assets/projects/cartify.jpg";
 import urbanthreadImg from "../assets/projects/urbanthread.jpg";
@@ -58,12 +59,12 @@ const defaultProjects = [
     tech: ["React", "Framer Motion", "Tailwind CSS", "HTML5 Canvas", "Vite"],
     videoUrl:
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    demoUrl: "https://portfolio-iota-six-26.vercel.app",
-    githubUrl: "https://github.com/sunnykumar6207058974-source/portfolio",
+    demoUrl: "https://pixelforge-dev.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/PixelForge",
     features: [
-      "Interactive HTML5 Canvas Particle Field",
-      "Full Video Walkthrough Modals & Auto-Play Hover",
-      "Dark / Light Theme System & Printable Resume Viewer",
+      "Interactive 3D Matrix Canvas Particle Grid",
+      "Video Lightbox Player with Framer Motion Dialog",
+      "Executive Resume Printable PDF & Dynamic Dark Theme",
     ],
   },
   {
@@ -71,17 +72,17 @@ const defaultProjects = [
     _id: "4",
     category: "WebGL 3D",
     image: aetheriaImg,
-    title: "Aetheria - Immersive WebGL 3D Matrix Experience",
+    title: "Aetheria - WebGL 3D Matrix Interactive Experience",
     description:
-      "A cutting-edge 3D WebGL digital experience featuring interactive particle torus matrix, audio frequency controls, 60 FPS graphics engine, and full-stack SaaS architecture.",
-    tech: ["React", "Three.js / WebGL", "Framer Motion", "Node.js", "GraphQL"],
+      "A cutting-edge WebGL 3D interactive matrix showcase with particle physics, bloom post-processing, spatial audio, and camera pan animations.",
+    tech: ["Three.js", "WebGL", "GSAP", "Tailwind CSS", "Node.js"],
     videoUrl:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    demoUrl: "https://aetheria-3d.vercel.app",
-    githubUrl: "https://github.com/sunny/aetheria",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    demoUrl: "https://aetheria-matrix.vercel.app",
+    githubUrl: "https://github.com/sunnykumar6207058974-source/Aetheria",
     features: [
-      "WebGL 60 FPS 3D Matrix & Torus Particles",
-      "Audio Sound FX & Interactive Storytelling",
+      "Real-time Three.js Particle Physics Engine",
+      "Post-Processing Bloom Filters & Spatial Audio",
       "Zero-Trust API Architecture & Ultra Fast Load (<0.8s)",
     ],
   },
@@ -94,6 +95,11 @@ const Portfolio = () => {
   const [projects, setProjects] = useState(defaultProjects);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const handleOpenProject = (project) => {
+    setSelectedProject(project);
+    trackProjectView(project.id || project._id, project.title);
+  };
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -195,7 +201,7 @@ const Portfolio = () => {
                   className="overflow-hidden h-64 sm:h-72 relative cursor-pointer bg-slate-950"
                   onMouseEnter={() => setHoveredProjectId(project.id)}
                   onMouseLeave={() => setHoveredProjectId(null)}
-                  onClick={() => setSelectedProject(project)}
+                  onClick={() => handleOpenProject(project)}
                 >
                   {hoveredProjectId === project.id ? (
                     <video
@@ -267,7 +273,7 @@ const Portfolio = () => {
                     </a>
 
                     <button
-                      onClick={() => setSelectedProject(project)}
+                      onClick={() => handleOpenProject(project)}
                       className="p-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition cursor-pointer flex items-center gap-1.5 text-sm font-medium"
                       title="View Details & Highlights"
                     >
