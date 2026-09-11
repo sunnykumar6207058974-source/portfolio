@@ -19,9 +19,6 @@ const LoadingScreen = ({ onFinished }) => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(() => {
-            if (onFinished) onFinished();
-          }, 350);
           return 100;
         }
         const diff = Math.floor(Math.random() * 8) + 5;
@@ -38,7 +35,16 @@ const LoadingScreen = ({ onFinished }) => {
       clearInterval(timer);
       clearInterval(messageTimer);
     };
-  }, [onFinished]);
+  }, []);
+
+  useEffect(() => {
+    if (progress >= 100 && onFinished) {
+      const timeout = setTimeout(() => {
+        onFinished();
+      }, 350);
+      return () => clearTimeout(timeout);
+    }
+  }, [progress, onFinished]);
 
   return (
     <motion.div

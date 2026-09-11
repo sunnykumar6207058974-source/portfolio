@@ -83,6 +83,7 @@ const AdminDashboard = () => {
 
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState("");
+  const [lastSynced, setLastSynced] = useState(new Date().toLocaleTimeString());
 
   // Modal Control States
   const [showProjectModal, setShowProjectModal] = useState(false);
@@ -196,6 +197,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchTrackers = async () => {
+    try {
+      const res = await apiGetAllTrackers();
+      if (res.success && res.data) {
+        setTrackers(res.data);
+      }
+    } catch {
+      // Keep empty fallback
+    }
+  };
+
   useEffect(() => {
     fetchDashboardData();
     fetchTrackers();
@@ -207,17 +219,6 @@ const AdminDashboard = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  const fetchTrackers = async () => {
-    try {
-      const res = await apiGetAllTrackers();
-      if (res.success && res.data) {
-        setTrackers(res.data);
-      }
-    } catch {
-      // Keep empty fallback
-    }
-  };
 
   const handleCreateTracker = async (e) => {
     e.preventDefault();

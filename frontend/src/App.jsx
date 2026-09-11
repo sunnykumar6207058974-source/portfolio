@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 import LoadingScreen from "./components/LoadingScreen";
 import CustomCursor from "./components/CustomCursor";
 import ParticleBackground from "./components/ParticleBackground";
@@ -27,16 +28,21 @@ import ClientTrackerPage from "./pages/ClientTrackerPage";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleLoadingFinished = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
   useEffect(() => {
     trackPageView();
   }, []);
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <AnimatePresence mode="wait">
-          {isLoading && <LoadingScreen onFinished={() => setIsLoading(false)} />}
-        </AnimatePresence>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <AnimatePresence mode="wait">
+            {isLoading && <LoadingScreen onFinished={handleLoadingFinished} />}
+          </AnimatePresence>
 
         <Router>
           <ScrollToTop />
@@ -81,6 +87,7 @@ function App() {
         </Router>
       </AuthProvider>
     </ThemeProvider>
+  </ErrorBoundary>
   );
 }
 
