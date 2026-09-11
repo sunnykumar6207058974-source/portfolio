@@ -16,9 +16,14 @@ export const AuthProvider = ({ children }) => {
     const savedRefresh = localStorage.getItem("pixelforge_refreshToken");
 
     if (savedUser && savedToken) {
-      setUser(JSON.parse(savedUser));
-      setAccessToken(savedToken);
-      setRefreshToken(savedRefresh);
+      try {
+        setUser(JSON.parse(savedUser));
+        setAccessToken(savedToken);
+        setRefreshToken(savedRefresh);
+      } catch {
+        localStorage.removeItem("pixelforge_user");
+        localStorage.removeItem("pixelforge_accessToken");
+      }
     }
     setLoading(false);
   }, []);
