@@ -12,9 +12,14 @@ const Footer = () => {
           <div>
             <Link
               to="/"
-              className="text-3xl font-bold bg-gradient-to-r from-cyan-500 to-purple-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent"
+              className="inline-flex items-center gap-2.5 text-3xl font-bold bg-gradient-to-r from-cyan-500 to-purple-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent group"
             >
-              PixelForge
+              <img
+                src="/logo.png"
+                alt="PixelForge Logo"
+                className="w-9 h-9 rounded-full object-cover ring-2 ring-cyan-500/40 group-hover:ring-cyan-400 transition duration-300 shadow-md shadow-cyan-500/20"
+              />
+              <span>PixelForge</span>
             </Link>
 
             <p className="text-slate-600 dark:text-slate-400 mt-3">

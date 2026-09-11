@@ -64,59 +64,72 @@ const Navbar = () => {
     <>
       {/* Top Fixed Header */}
       <header className="fixed top-0 left-0 w-full z-50 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 py-3.5 sm:py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center gap-6 lg:gap-10 px-4 sm:px-6 py-3 sm:py-3.5">
 
           {/* Logo */}
           <Link
             to="/"
-            className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent cursor-pointer tracking-tight"
+            className="shrink-0 flex items-center gap-2.5 text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent cursor-pointer tracking-tight group whitespace-nowrap"
           >
-            PixelForge
+            <img
+              src="/logo.png"
+              alt="PixelForge Logo"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-cyan-500/40 group-hover:ring-cyan-400 group-hover:scale-105 transition duration-300 shadow-md shadow-cyan-500/20 shrink-0"
+            />
+            <span className="shrink-0 font-extrabold">PixelForge</span>
           </Link>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-7">
-            {navLinks.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `cursor-pointer font-medium transition text-sm lg:text-base ${
-                    isActive
-                      ? "text-cyan-600 dark:text-cyan-400 font-semibold"
-                      : "text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400"
-                  }`
-                }
+          <nav className="hidden md:flex items-center gap-3.5 lg:gap-5 xl:gap-7 ml-auto">
+            <div className="flex items-center gap-3 lg:gap-4.5 xl:gap-6">
+              {navLinks.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `cursor-pointer font-medium transition text-xs lg:text-sm xl:text-base whitespace-nowrap ${
+                      isActive
+                        ? "text-cyan-600 dark:text-cyan-400 font-semibold"
+                        : "text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400"
+                    }`
+                  }
+                >
+                  {item.name}
+                </NavLink>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="hidden lg:block w-px h-5 bg-slate-200 dark:bg-slate-800" />
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2.5 lg:gap-3 shrink-0">
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleDarkMode}
+                aria-label="Toggle Dark/Light Theme"
+                className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
               >
-                {item.name}
-              </NavLink>
-            ))}
+                {darkMode ? <HiSun className="text-lg" /> : <HiMoon className="text-lg text-slate-700" />}
+              </button>
 
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleDarkMode}
-              aria-label="Toggle Dark/Light Theme"
-              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer"
-            >
-              {darkMode ? <HiSun className="text-xl" /> : <HiMoon className="text-xl text-slate-700" />}
-            </button>
+              {/* Direct Download Resume Button */}
+              <a
+                href={resumeUrl}
+                download="Sunny_Kumar_Resume.pdf"
+                className="hidden xl:inline-flex items-center gap-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 px-3.5 py-1.5 rounded-full font-bold transition text-xs xl:text-sm cursor-pointer shadow-sm whitespace-nowrap shrink-0"
+              >
+                <HiDownload />
+                Resume
+              </a>
 
-            {/* Direct Download Resume Button */}
-            <a
-              href={resumeUrl}
-              download="Sunny_Kumar_Resume.pdf"
-              className="hidden lg:inline-flex items-center gap-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 px-4 py-2 rounded-full font-bold transition text-sm cursor-pointer shadow-sm"
-            >
-              <HiDownload />
-              Download Resume
-            </a>
-
-            <Link
-              to="/contact"
-              className="cursor-pointer border border-cyan-500 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500 hover:text-slate-950 px-5 py-2 rounded-full font-semibold transition text-sm lg:text-base shadow-sm"
-            >
-              Hire Me
-            </Link>
+              <Link
+                to="/contact"
+                className="cursor-pointer border border-cyan-500 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500 hover:text-slate-950 px-3.5 py-1.5 lg:px-4 lg:py-2 rounded-full font-semibold transition text-xs lg:text-sm shadow-sm whitespace-nowrap shrink-0"
+              >
+                Hire Me
+              </Link>
+            </div>
           </nav>
 
           {/* Mobile Header Right Controls */}

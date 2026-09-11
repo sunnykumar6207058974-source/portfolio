@@ -60,9 +60,11 @@ const LoadingScreen = ({ onFinished }) => {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-2 mb-8"
         >
-          <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-400 text-2xl shadow-lg shadow-cyan-500/30">
-            <HiSparkles />
-          </div>
+          <img
+            src="/logo.png"
+            alt="PixelForge Logo"
+            className="w-12 h-12 rounded-full object-cover ring-2 ring-cyan-400/60 shadow-lg shadow-cyan-500/30"
+          />
           <span className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-500 bg-clip-text text-transparent">
             PixelForge
           </span>
