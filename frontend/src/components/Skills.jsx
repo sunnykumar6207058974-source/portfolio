@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiSparkles } from "react-icons/hi";
+import { HiSparkles, HiViewGrid } from "react-icons/hi";
+import { RiPlayList2Fill } from "react-icons/ri";
 import BookmarkSkillCard from "./BookmarkSkillCard";
+import FanDeckSkills from "./FanDeckSkills";
 import { apiGetSkills } from "../services/api";
 
 import frontendSkillImg from "../assets/skills/frontend.png";
@@ -110,6 +112,7 @@ const categoryFilters = [
 const Skills = () => {
   const [skills, setSkills] = useState(defaultSkills);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [viewMode, setViewMode] = useState("fandeck"); // "fandeck" | "bookmark"
 
   const fetchSkills = async () => {
     try {
@@ -162,7 +165,7 @@ const Skills = () => {
 
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           {/* Scrolltide Style Micro Capsule Pill */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -170,8 +173,8 @@ const Skills = () => {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400 backdrop-blur-md mb-4 shadow-sm"
           >
-            <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse shadow-sm shadow-cyan-400" />
-            <span className="tracking-widest uppercase">Scroll-Driven Card Bookmark UI</span>
+            <span className="h-2 w-2 rounded-full bg-[#e2f952] animate-pulse shadow-sm shadow-[#e2f952]" />
+            <span className="tracking-widest uppercase">Scrolltide Fan Deck & Card Bookmark</span>
             <span className="text-cyan-500 dark:text-cyan-300">✦</span>
           </motion.div>
 
@@ -197,61 +200,108 @@ const Skills = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
           >
-            Tactile bookmark silhouette cards with precision bottom bite notches and saturated artwork blooms — powered by full-stack engineering and creative production.
+            Interactive splayed campaign cards with bottom hinge rotation and bookmark silhouettes — exploring full-stack engineering, databases, and creative media.
           </motion.p>
 
-          {/* Filter Pills (Scrolltide Style) */}
+          {/* View Mode Switcher Pills (Fan Deck vs Card Bookmark Grid) */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-2"
+            className="mt-8 inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 shadow-inner"
           >
-            {categoryFilters.map((cat) => {
-              const isActive = activeCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer border ${
-                    isActive
-                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-cyan-400 dark:border-white shadow-lg shadow-cyan-500/20 scale-105"
-                      : "bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-white"
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
+            <button
+              onClick={() => setViewMode("fandeck")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
+                viewMode === "fandeck"
+                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <RiPlayList2Fill className="text-base" />
+              <span>Fan Deck (Interactive)</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode("bookmark")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
+                viewMode === "bookmark"
+                  ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-md scale-102"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <HiViewGrid className="text-base" />
+              <span>Bookmark Grid</span>
+            </button>
           </motion.div>
+
+          {/* Filter Pills (Shown in Bookmark Grid Mode) */}
+          {viewMode === "bookmark" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-6 flex flex-wrap items-center justify-center gap-2"
+            >
+              {categoryFilters.map((cat) => {
+                const isActive = activeCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer border ${
+                      isActive
+                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-cyan-400 dark:border-white shadow-lg shadow-cyan-500/20 scale-105"
+                        : "bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </motion.div>
+          )}
         </div>
 
-        {/* Skills Bookmark Cards Grid */}
+        {/* Dynamic Display: Fan Deck vs Card Bookmark Grid */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-9 items-stretch"
-          >
-            {filteredSkills.map((skill, idx) => (
-              <BookmarkSkillCard
-                key={skill.id || idx}
-                skill={skill}
-                index={idx}
-              />
-            ))}
-          </motion.div>
+          {viewMode === "fandeck" ? (
+            <motion.div
+              key="fandeck-skills-view"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.4 }}
+              className="w-full flex justify-center"
+            >
+              <FanDeckSkills skills={skills} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="bookmark-skills-view"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.4 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-9 items-stretch pt-2 pb-12"
+            >
+              {filteredSkills.map((skill, idx) => (
+                <BookmarkSkillCard
+                  key={skill.id || idx}
+                  skill={skill}
+                  index={idx}
+                />
+              ))}
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {/* Footer Bottom Note */}
-        <div className="mt-16 text-center">
+        <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
-            <HiSparkles className="text-cyan-400" />
-            <span>Hover over any card to trigger the saturated dissolve bloom</span>
+            <HiSparkles className="text-[#e2f952]" />
+            <span>Use arrow buttons or toggle view modes to explore technologies</span>
           </div>
         </div>
       </div>
