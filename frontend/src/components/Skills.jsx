@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { HiSparkles, HiRefresh } from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiSparkles } from "react-icons/hi";
+import BookmarkSkillCard from "./BookmarkSkillCard";
 import { apiGetSkills } from "../services/api";
 
 import frontendSkillImg from "../assets/skills/frontend.png";
@@ -15,159 +16,243 @@ const defaultSkills = [
     id: 1,
     image: frontendSkillImg,
     badge: "UI & Web Frontend",
+    brandTag: "— Nova Frontend®",
+    category: "Frontend",
+    tagline: "Pixel-perfect reactive interfaces & high-framerate motion.",
     title: "Frontend Development",
-    skills: "React.js, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS, Vite",
+    skills: "React.js, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS, Vite, Next.js",
+    tags: ["React.js", "Tailwind CSS", "JavaScript", "Next.js", "Vite"],
     level: "95%",
+    metric: "95% Mastery",
+    themeKey: "cyan",
   },
   {
     id: 2,
     image: backendSkillImg,
     badge: "Server Architecture",
+    brandTag: "— Core Backend®",
+    category: "Backend",
+    tagline: "High-throughput REST APIs, microservices & scalable engines.",
     title: "Backend Development",
-    skills: "Node.js, Express.js, REST APIs, GraphQL, Microservices",
+    skills: "Node.js, Express.js, REST APIs, GraphQL, Microservices, JWT Auth",
+    tags: ["Node.js", "Express.js", "REST APIs", "GraphQL", "JWT"],
     level: "90%",
+    metric: "90% Mastery",
+    themeKey: "emerald",
   },
   {
     id: 3,
     image: videoSkillImg,
     badge: "Creative Media",
+    brandTag: "— Motion Studio®",
+    category: "Creative Media",
+    tagline: "Cinematic color grading, dynamic sound design & VFX.",
     title: "Video Editing & Motion Graphics",
-    skills: "Adobe Premiere, DaVinci Resolve, Motion FX, Sound Design",
+    skills: "Adobe Premiere, DaVinci Resolve, After Effects, Motion FX, Sound Design",
+    tags: ["Premiere Pro", "DaVinci", "After Effects", "Motion FX"],
     level: "92%",
+    metric: "92% Mastery",
+    themeKey: "purple",
   },
   {
     id: 4,
     image: databaseSkillImg,
     badge: "Data & Storage",
+    brandTag: "— Nexus Storage®",
+    category: "Data & Cloud",
+    tagline: "Resilient schemas, ACID transactions & high-speed caching.",
     title: "Database Systems",
-    skills: "MongoDB, Mongoose, MySQL, Firebase Firestore, PostgreSQL",
+    skills: "MongoDB, Mongoose, MySQL, Firebase Firestore, PostgreSQL, Redis",
+    tags: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Mongoose"],
     level: "85%",
+    metric: "85% Mastery",
+    themeKey: "amber",
   },
   {
     id: 5,
     image: aiMlSkillImg,
     badge: "AI Systems",
+    brandTag: "— Neural Forge®",
+    category: "AI Systems",
+    tagline: "LLM integrations, prompt engineering & neural pipelines.",
     title: "AI & Machine Learning",
-    skills: "Python, OpenAI APIs, Prompt Engineering, Neural Networks",
+    skills: "Python, OpenAI APIs, Prompt Engineering, LangChain, Neural Networks",
+    tags: ["Python", "OpenAI APIs", "Prompt Eng.", "LangChain"],
     level: "80%",
+    metric: "80% Mastery",
+    themeKey: "rose",
   },
   {
     id: 6,
     image: toolsCloudSkillImg,
     badge: "DevOps & Cloud",
+    brandTag: "— Cloud Deploy®",
+    category: "Data & Cloud",
+    tagline: "Automated CI/CD pipelines, containerization & edge CDN.",
     title: "Tools & Cloud Deployment",
-    skills: "Git, GitHub, Vercel, Netlify, Docker, CI/CD Pipelines",
+    skills: "Git, GitHub, Vercel, Netlify, Docker, CI/CD Pipelines, Linux",
+    tags: ["Git/GitHub", "Vercel", "Docker", "CI/CD", "Linux"],
     level: "90%",
+    metric: "90% Mastery",
+    themeKey: "sky",
   },
+];
+
+const categoryFilters = [
+  "All",
+  "Frontend",
+  "Backend",
+  "Creative Media",
+  "Data & Cloud",
+  "AI Systems",
 ];
 
 const Skills = () => {
   const [skills, setSkills] = useState(defaultSkills);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   const fetchSkills = async () => {
-    setLoading(true);
-    setError(null);
-    const res = await apiGetSkills();
-    if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-      const mapped = res.data.map((sk, idx) => {
-        let img = sk.image;
-        if (!img || img.startsWith("/assets/skills/")) {
-          const fallback = defaultSkills[idx % defaultSkills.length];
-          img = fallback ? fallback.image : frontendSkillImg;
-        }
-        return { ...sk, id: sk.id || sk._id || idx + 1, image: img };
-      });
-      setSkills(mapped);
-    } else if (!res.success) {
-      setError(res.error || "Could not fetch Skills API");
+    try {
+      const res = await apiGetSkills();
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const mapped = res.data.map((sk, idx) => {
+          let img = sk.image;
+          if (!img || img.startsWith("/assets/skills/")) {
+            const fallback = defaultSkills[idx % defaultSkills.length];
+            img = fallback ? fallback.image : frontendSkillImg;
+          }
+          const defaultRef = defaultSkills[idx % defaultSkills.length] || {};
+          return {
+            ...defaultRef,
+            ...sk,
+            id: sk.id || sk._id || idx + 1,
+            image: img,
+            brandTag: defaultRef.brandTag || `— ${sk.title || "Skill"}®`,
+            tagline: defaultRef.tagline || sk.skills || "Mastery in core development workflows.",
+            themeKey: defaultRef.themeKey || (["cyan", "emerald", "purple", "amber", "rose", "sky"][idx % 6]),
+            category: defaultRef.category || "Frontend",
+            tags: defaultRef.tags || (sk.skills ? sk.skills.split(",").map((s) => s.trim()).slice(0, 4) : []),
+            metric: defaultRef.metric || `${sk.level || "90%"} Mastery`,
+          };
+        });
+        setSkills(mapped);
+      }
+    } catch {
+      // Keep rich defaults
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchSkills();
   }, []);
 
+  const filteredSkills =
+    activeCategory === "All"
+      ? skills
+      : skills.filter((s) => s.category === activeCategory);
+
   return (
     <section
       id="skills"
-      className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white px-4 sm:px-6 py-20 transition-colors duration-300"
+      className="relative min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white px-4 sm:px-6 lg:px-8 py-24 transition-colors duration-300 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
-        {/* Heading */}
-        <div className="text-center mb-16">
-          <p className="text-cyan-600 dark:text-cyan-400 text-lg font-semibold flex items-center justify-center gap-2">
-            <HiSparkles className="text-xl" />
-            My Skills
-          </p>
+      {/* Background Ambient Cyber Glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-cyan-500/10 via-purple-500/10 to-transparent blur-3xl pointer-events-none -z-10 rounded-full" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/10 blur-3xl pointer-events-none -z-10 rounded-full" />
 
-          <h2 className="text-4xl md:text-5xl font-extrabold mt-3 text-slate-900 dark:text-white tracking-tight">
-            Technologies &
-            <span className="block bg-gradient-to-r from-cyan-500 via-teal-400 to-purple-600 dark:from-cyan-400 dark:via-teal-300 dark:to-purple-500 bg-clip-text text-transparent">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          {/* Scrolltide Style Micro Capsule Pill */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400 backdrop-blur-md mb-4 shadow-sm"
+          >
+            <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse shadow-sm shadow-cyan-400" />
+            <span className="tracking-widest uppercase">Scroll-Driven Card Bookmark UI</span>
+            <span className="text-cyan-500 dark:text-cyan-300">✦</span>
+          </motion.div>
+
+          {/* Section Main Title */}
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.08]"
+          >
+            Technologies &{" "}
+            <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-500 bg-clip-text text-transparent">
               Creative Expertise
             </span>
-          </h2>
-          <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
-            A comprehensive overview of my software engineering stack, video production tools, and cloud deployment capabilities.
-          </p>
+          </motion.h2>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+          >
+            Tactile bookmark silhouette cards with precision bottom bite notches and saturated artwork blooms — powered by full-stack engineering and creative production.
+          </motion.p>
+
+          {/* Filter Pills (Scrolltide Style) */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-2"
+          >
+            {categoryFilters.map((cat) => {
+              const isActive = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer border ${
+                    isActive
+                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-cyan-400 dark:border-white shadow-lg shadow-cyan-500/20 scale-105"
+                      : "bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </motion.div>
         </div>
 
-        {/* Skills Cards Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {skills.map((skill) => (
-            <motion.div
-              key={skill.id}
-              whileHover={{ y: -8 }}
-              className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-cyan-500 dark:hover:border-cyan-400 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between"
-            >
-              {/* Skill Banner Image */}
-              <div className="relative overflow-hidden h-52 sm:h-56 bg-slate-950">
-                <img
-                  src={skill.image}
-                  alt={skill.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-950/30 to-transparent" />
-                <span className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md text-cyan-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-slate-700 shadow-md">
-                  {skill.badge}
-                </span>
-              </div>
+        {/* Skills Bookmark Cards Grid */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-9 items-stretch"
+          >
+            {filteredSkills.map((skill, idx) => (
+              <BookmarkSkillCard
+                key={skill.id || idx}
+                skill={skill}
+                index={idx}
+              />
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
-              {/* Skill Content */}
-              <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition">
-                    {skill.title}
-                  </h3>
-
-                  <p className="text-slate-600 dark:text-slate-400 text-sm font-medium leading-relaxed mb-6">
-                    {skill.skills}
-                  </p>
-                </div>
-
-                {/* Progress Bar */}
-                <div>
-                  <div className="flex justify-between items-center mb-2 text-xs font-bold text-slate-700 dark:text-slate-300">
-                    <span>Mastery Progress</span>
-                    <span className="text-cyan-600 dark:text-cyan-400 font-mono">{skill.level}</span>
-                  </div>
-                  <div className="h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700/80">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      whileInView={{ width: skill.level }}
-                      transition={{ duration: 1.2, ease: "easeOut" }}
-                      viewport={{ once: true }}
-                      className="h-full bg-gradient-to-r from-cyan-500 via-teal-400 to-purple-600 dark:from-cyan-400 dark:via-teal-300 dark:to-purple-500 rounded-full shadow-md shadow-cyan-500/30"
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* Footer Bottom Note */}
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
+            <HiSparkles className="text-cyan-400" />
+            <span>Hover over any card to trigger the saturated dissolve bloom</span>
+          </div>
         </div>
       </div>
     </section>
