@@ -1,8 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiX, HiPlay, HiExternalLink, HiCode, HiSparkles, HiRefresh } from "react-icons/hi";
+import {
+  HiX,
+  HiPlay,
+  HiExternalLink,
+  HiCode,
+  HiSparkles,
+  HiBookmark,
+  HiViewGrid,
+} from "react-icons/hi";
 import { apiGetProjects } from "../services/api";
 import { trackProjectView } from "../utils/analytics";
+import BookmarkProjectCard from "./BookmarkProjectCard";
 
 import cartifyImg from "../assets/projects/cartify.jpg";
 import urbanthreadImg from "../assets/projects/urbanthread.jpg";
@@ -14,6 +23,10 @@ const defaultProjects = [
     id: 1,
     _id: "1",
     category: "E-Commerce",
+    badge: "Full-Stack App",
+    brandTag: "— Cartify®",
+    metric: "01 // STORE",
+    themeKey: "emerald",
     image: cartifyImg,
     title: "Cartify - Premium E-Commerce Shopping Platform",
     description:
@@ -33,6 +46,10 @@ const defaultProjects = [
     id: 2,
     _id: "2",
     category: "E-Commerce",
+    badge: "Streetwear Drops",
+    brandTag: "— UrbanThread®",
+    metric: "02 // SNEAKERS",
+    themeKey: "purple",
     image: urbanthreadImg,
     title: "UrbanThread - Luxe Sneakers & Streetwear Drops",
     description:
@@ -52,6 +69,10 @@ const defaultProjects = [
     id: 3,
     _id: "3",
     category: "Web Apps",
+    badge: "Portfolio & Lab",
+    brandTag: "— PixelForge®",
+    metric: "03 // DEV",
+    themeKey: "cyan",
     image: pixelforgeImg,
     title: "PixelForge - Developer Portfolio & Digital Showcase",
     description:
@@ -71,6 +92,10 @@ const defaultProjects = [
     id: 4,
     _id: "4",
     category: "WebGL 3D",
+    badge: "WebGL 3D Matrix",
+    brandTag: "— Aetheria®",
+    metric: "04 // MATRIX",
+    themeKey: "amber",
     image: aetheriaImg,
     title: "Aetheria - WebGL 3D Matrix Interactive Experience",
     description:
@@ -89,6 +114,7 @@ const defaultProjects = [
 ];
 
 const Portfolio = () => {
+  const [viewMode, setViewMode] = useState("bookmark"); // "bookmark" (Scrolltide) | "classic"
   const [activeTab, setActiveTab] = useState("All");
   const [selectedProject, setSelectedProject] = useState(null);
   const [hoveredProjectId, setHoveredProjectId] = useState(null);
@@ -113,7 +139,15 @@ const Portfolio = () => {
           const fallback = defaultProjects[idx % defaultProjects.length];
           img = fallback ? fallback.image : cartifyImg;
         }
-        return { ...p, id: p.id || p._id || idx + 1, image: img };
+        return {
+          ...p,
+          id: p.id || p._id || idx + 1,
+          image: img,
+          brandTag: p.brandTag || `— ${p.title.split(" - ")[0].split(" ")[0]}®`,
+          badge: p.badge || p.category,
+          themeKey: p.themeKey || ["emerald", "purple", "cyan", "amber"][idx % 4],
+          metric: p.metric || `${String(idx + 1).padStart(2, "0")} // ${p.category.toUpperCase()}`,
+        };
       });
       setProjects(mapped);
     } else if (!res.success) {
@@ -166,6 +200,35 @@ const Portfolio = () => {
           </p>
         </div>
 
+        {/* View Mode Switcher Pills (Scrolltide Bookmark Cards vs Classic Grid) */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 shadow-inner">
+            <button
+              onClick={() => setViewMode("bookmark")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
+                viewMode === "bookmark"
+                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <HiBookmark className="text-base" />
+              <span>Bookmark Cards (Scrolltide)</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode("classic")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
+                viewMode === "classic"
+                  ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-md scale-102"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <HiViewGrid className="text-base" />
+              <span>Classic Grid</span>
+            </button>
+          </div>
+        </div>
+
         {/* Category Filter Tabs */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12">
           {categories.map((tab) => (
@@ -183,119 +246,139 @@ const Portfolio = () => {
           ))}
         </div>
 
-        {/* Project Cards Grid */}
-        <motion.div layout className="grid md:grid-cols-2 gap-8">
-          <AnimatePresence>
-            {filteredProjects.map((project) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden group hover:border-cyan-500 dark:hover:border-cyan-400 hover:-translate-y-2 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between"
-              >
-                {/* Image & Video Hover Container */}
-                <div
-                  className="overflow-hidden h-64 sm:h-72 relative cursor-pointer bg-slate-950"
-                  onMouseEnter={() => setHoveredProjectId(project.id)}
-                  onMouseLeave={() => setHoveredProjectId(null)}
-                  onClick={() => handleOpenProject(project)}
+        {/* Project Cards View */}
+        {viewMode === "bookmark" ? (
+          /* Scrolltide c-card-bookmark Layout */
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            <AnimatePresence>
+              {filteredProjects.map((project, idx) => (
+                <BookmarkProjectCard
+                  key={project.id || idx}
+                  project={project}
+                  index={idx}
+                  onOpenDetails={handleOpenProject}
+                  isHoveredVideo={hoveredProjectId === project.id}
+                  onHoverStart={() => setHoveredProjectId(project.id)}
+                  onHoverEnd={() => setHoveredProjectId(null)}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        ) : (
+          /* Classic Project Cards Grid */
+          <motion.div layout className="grid md:grid-cols-2 gap-8">
+            <AnimatePresence>
+              {filteredProjects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden group hover:border-cyan-500 dark:hover:border-cyan-400 hover:-translate-y-2 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between"
                 >
-                  {hoveredProjectId === project.id ? (
-                    <video
-                      src={project.videoUrl}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="w-full h-full object-cover transition duration-500"
-                    />
-                  ) : (
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
-                    />
-                  )}
+                  {/* Image & Video Hover Container */}
+                  <div
+                    className="overflow-hidden h-64 sm:h-72 relative cursor-pointer bg-slate-950"
+                    onMouseEnter={() => setHoveredProjectId(project.id)}
+                    onMouseLeave={() => setHoveredProjectId(null)}
+                    onClick={() => handleOpenProject(project)}
+                  >
+                    {hoveredProjectId === project.id ? (
+                      <video
+                        src={project.videoUrl}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="w-full h-full object-cover transition duration-500"
+                      />
+                    ) : (
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
+                      />
+                    )}
 
-                  {/* Play Overlay Icon */}
-                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
-                    <div className="w-16 h-16 rounded-full bg-cyan-500/90 text-slate-950 flex items-center justify-center text-3xl shadow-xl shadow-cyan-500/50 transform group-hover:scale-110 transition duration-300">
-                      <HiPlay className="ml-1" />
+                    {/* Play Overlay Icon */}
+                    <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+                      <div className="w-16 h-16 rounded-full bg-cyan-500/90 text-slate-950 flex items-center justify-center text-3xl shadow-xl shadow-cyan-500/50 transform group-hover:scale-110 transition duration-300">
+                        <HiPlay className="ml-1" />
+                      </div>
+                    </div>
+
+                    <span className="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md text-cyan-400 text-xs font-bold px-3 py-1.5 rounded-full border border-slate-700 flex items-center gap-1.5 shadow-md">
+                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                      {project.category}
+                    </span>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition">
+                        {project.title}
+                      </h3>
+
+                      <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed mb-4">
+                        {project.description}
+                      </p>
+
+                      {/* Tech Badges */}
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tech.map((t, i) => (
+                          <span
+                            key={i}
+                            className="bg-slate-100 dark:bg-slate-800/80 text-cyan-700 dark:text-cyan-300 text-xs font-semibold px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-between gap-2.5 pt-5 border-t border-slate-100 dark:border-slate-800/80">
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-2.5 px-3.5 rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20"
+                        title="Open Live Project"
+                      >
+                        <HiExternalLink className="text-base" />
+                        Live Demo
+                      </a>
+
+                      <button
+                        onClick={() => handleOpenProject(project)}
+                        className="p-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition cursor-pointer flex items-center gap-1.5 text-sm font-medium"
+                        title="View Details & Highlights"
+                      >
+                        <HiPlay className="text-base text-cyan-500" />
+                        <span>Details</span>
+                      </button>
+
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
+                        title="View GitHub Repository"
+                      >
+                        <HiCode className="text-lg" />
+                      </a>
                     </div>
                   </div>
-
-                  <span className="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md text-cyan-400 text-xs font-bold px-3 py-1.5 rounded-full border border-slate-700 flex items-center gap-1.5 shadow-md">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    {project.category}
-                  </span>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition">
-                      {project.title}
-                    </h3>
-
-                    <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed mb-4">
-                      {project.description}
-                    </p>
-
-                    {/* Tech Badges */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {project.tech.map((t, i) => (
-                        <span
-                          key={i}
-                          className="bg-slate-100 dark:bg-slate-800/80 text-cyan-700 dark:text-cyan-300 text-xs font-semibold px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center justify-between gap-2.5 pt-5 border-t border-slate-100 dark:border-slate-800/80">
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-2.5 px-3.5 rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20"
-                      title="Open Live Project"
-                    >
-                      <HiExternalLink className="text-base" />
-                      Live Demo
-                    </a>
-
-                    <button
-                      onClick={() => handleOpenProject(project)}
-                      className="p-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition cursor-pointer flex items-center gap-1.5 text-sm font-medium"
-                      title="View Details & Highlights"
-                    >
-                      <HiPlay className="text-base text-cyan-500" />
-                      <span>Details</span>
-                    </button>
-
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
-                      title="View GitHub Repository"
-                    >
-                      <HiCode className="text-lg" />
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {/* Video Preview & Details Modal Popup */}
         <AnimatePresence>
@@ -335,13 +418,24 @@ const Portfolio = () => {
                   </button>
                 </div>
 
-                {/* Modal Main Banner Image */}
+                {/* Modal Main Banner Image or Video Player */}
                 <div className="relative bg-slate-950 h-64 sm:h-80 w-full overflow-hidden">
-                  <img
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    className="w-full h-full object-cover object-top"
-                  />
+                  {selectedProject.videoUrl ? (
+                    <video
+                      src={selectedProject.videoUrl}
+                      controls
+                      autoPlay
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  )}
                 </div>
 
                 {/* Modal Info & Feature Highlights */}
