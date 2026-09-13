@@ -152,7 +152,7 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
 
       {/* Fan Deck Splayed Stage Container */}
       <div
-        className="relative w-full h-[540px] sm:h-[600px] flex items-center justify-center overflow-visible"
+        className="relative w-full h-[520px] sm:h-[560px] flex items-center justify-center overflow-visible"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -190,7 +190,7 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
                   setActiveIndex(index);
                 }
               }}
-              className={`absolute w-[295px] sm:w-[355px] md:w-[380px] h-[500px] sm:h-[550px] rounded-[32px] p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-pointer backdrop-blur-xl border transition-all duration-500 shadow-2xl ${
+              className={`absolute w-[285px] sm:w-[340px] md:w-[365px] h-[475px] sm:h-[515px] rounded-[32px] p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer backdrop-blur-xl border transition-all duration-500 shadow-2xl ${
                 isActive
                   ? `bg-slate-950/95 ${pTheme.activeBorder} ring-1 ring-white/20`
                   : "bg-slate-900/85 border-slate-800 hover:border-slate-600 hover:opacity-100"
@@ -299,44 +299,52 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
               )}
 
               {/* Bottom Row: Action Buttons */}
-              <div className="relative z-10 pt-2 flex items-center gap-2">
-                {/* Acid-Yellow Plate (Signature Scrolltide Fan Deck Element) */}
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-[#e2f952] hover:bg-[#d4ed35] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md transform active:scale-98"
-                >
-                  <HiExternalLink className="text-sm" />
-                  <span>Live Demo</span>
-                </a>
+              <div className="relative z-10 pt-2">
+                {isActive ? (
+                  <div className="flex items-center gap-2">
+                    {/* Acid-Yellow Plate (Signature Scrolltide Fan Deck Element) */}
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-[#e2f952] hover:bg-[#d4ed35] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md transform active:scale-98"
+                    >
+                      <HiExternalLink className="text-sm" />
+                      <span>Live Demo</span>
+                    </a>
 
-                {/* Details Button */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onOpenProject) onOpenProject(project);
-                  }}
-                  className="p-2.5 px-3 rounded-xl border border-slate-700 bg-slate-900/90 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition cursor-pointer"
-                  title="View Details & Video"
-                >
-                  <HiPlay className="text-sm text-cyan-400" />
-                  <span>Details</span>
-                </button>
+                    {/* Details Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onOpenProject) onOpenProject(project);
+                      }}
+                      className="py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-900/90 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition cursor-pointer hover:border-cyan-400"
+                      title="View Details & Video"
+                    >
+                      <HiPlay className="text-sm text-cyan-400" />
+                      <span>Details</span>
+                    </button>
 
-                {/* Code Link */}
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="p-2.5 rounded-xl border border-slate-700 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white transition flex items-center justify-center"
-                  title="GitHub Repository"
-                >
-                  <HiCode className="text-base" />
-                </a>
+                    {/* Code Link */}
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2.5 rounded-xl border border-slate-700 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white transition flex items-center justify-center hover:border-cyan-400"
+                      title="GitHub Repository"
+                    >
+                      <HiCode className="text-base" />
+                    </a>
+                  </div>
+                ) : (
+                  <div className="w-full py-2.5 px-4 rounded-xl bg-slate-800/60 border border-slate-700/60 text-slate-400 font-mono text-xs text-center font-bold">
+                    Click to Inspect
+                  </div>
+                )}
               </div>
             </motion.div>
           );
@@ -344,60 +352,69 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
       </div>
 
       {/* Fan Deck Controls & Indicators */}
-      <div className="relative z-20 flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 w-full max-w-2xl px-4">
-        {/* Previous / Play / Next Controls */}
-        <div className="flex items-center gap-2 bg-slate-900/80 backdrop-blur-md border border-slate-800 p-1.5 rounded-full shadow-lg">
+      <div className="relative z-20 flex flex-col items-center gap-4 mt-12 sm:mt-16 w-full max-w-2xl px-4">
+        {/* Interactive Controls Bar */}
+        <div className="flex items-center justify-center gap-3">
+          {/* Previous Button */}
           <button
             onClick={handlePrev}
-            className="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
             aria-label="Previous Project"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-800 hover:border-slate-700 flex items-center justify-center transition-all shadow-lg active:scale-95 cursor-pointer"
           >
             <HiChevronLeft className="text-xl" />
           </button>
 
+          {/* Play / Pause Auto Advance Button */}
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-[#e2f952] transition cursor-pointer"
-            aria-label={isPlaying ? "Pause Rotation" : "Auto Play Rotation"}
+            aria-label={isPlaying ? "Pause Auto-play" : "Play Auto-play"}
+            className={`h-10 sm:h-11 px-4 rounded-full border text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-lg cursor-pointer ${
+              isPlaying
+                ? "bg-[#e2f952]/20 border-[#e2f952]/50 text-[#e2f952]"
+                : "bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white"
+            }`}
           >
-            {isPlaying ? (
-              <HiPause className="text-lg text-[#e2f952]" />
-            ) : (
-              <HiPlay className="text-lg" />
-            )}
+            {isPlaying ? <HiPause className="text-sm" /> : <HiPlay className="text-sm" />}
+            <span>{isPlaying ? "Autoplay ON" : "Autoplay"}</span>
           </button>
 
+          {/* Pagination Pill */}
+          <div className="px-4 py-2.5 rounded-full bg-slate-900/95 border border-slate-800 text-slate-200 font-mono text-xs sm:text-sm font-black shadow-inner tracking-wider">
+            <span className="text-[#e2f952]">{activeIndex + 1}</span>
+            <span className="text-slate-500 mx-1.5">/</span>
+            <span>{total}</span>
+          </div>
+
+          {/* Next Button */}
           <button
             onClick={handleNext}
-            className="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
             aria-label="Next Project"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#e2f952] text-slate-950 font-bold border border-white hover:border-[#e2f952] flex items-center justify-center transition-all shadow-lg active:scale-95 cursor-pointer"
           >
             <HiChevronRight className="text-xl" />
           </button>
         </div>
 
-        {/* Interactive Thumbnail Dots & Titles Track */}
-        <div className="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
+        {/* Project Thumbnail Track */}
+        <div className="flex items-center justify-center flex-wrap gap-2 pt-1">
           {projects.map((project, idx) => {
             const isActive = idx === activeIndex;
             return (
               <button
                 key={project.id || idx}
                 onClick={() => setActiveIndex(idx)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold transition-all duration-300 cursor-pointer ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-300 cursor-pointer ${
                   isActive
-                    ? "bg-slate-800 text-white border border-cyan-400 shadow-md shadow-cyan-500/20 scale-105"
-                    : "bg-slate-900/50 text-slate-400 border border-slate-800 hover:text-slate-200"
+                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border border-slate-700 dark:border-white shadow-md scale-105"
+                    : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-400"
                 }`}
               >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    isActive ? "bg-[#e2f952] animate-pulse" : "bg-slate-600"
+                  className={`w-2 h-2 rounded-full ${
+                    isActive ? "bg-[#e2f952]" : "bg-slate-400 dark:bg-slate-600"
                   }`}
                 />
-                <span className="truncate max-w-[90px] sm:max-w-[120px]">
-                  {project.title.split(" - ")[0]}
-                </span>
+                <span>{project.title.split(" - ")[0]}</span>
               </button>
             );
           })}
