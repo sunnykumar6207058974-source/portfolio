@@ -9,9 +9,11 @@ import {
   HiBookmark,
   HiViewGrid,
 } from "react-icons/hi";
+import { RiPlayList2Fill } from "react-icons/ri";
 import { apiGetProjects } from "../services/api";
 import { trackProjectView } from "../utils/analytics";
 import BookmarkProjectCard from "./BookmarkProjectCard";
+import FanDeckProjects from "./FanDeckProjects";
 
 import cartifyImg from "../assets/projects/cartify.jpg";
 import urbanthreadImg from "../assets/projects/urbanthread.jpg";
@@ -114,7 +116,7 @@ const defaultProjects = [
 ];
 
 const Portfolio = () => {
-  const [viewMode, setViewMode] = useState("bookmark"); // "bookmark" (Scrolltide) | "classic"
+  const [viewMode, setViewMode] = useState("fandeck"); // "fandeck" | "bookmark" | "classic"
   const [activeTab, setActiveTab] = useState("All");
   const [selectedProject, setSelectedProject] = useState(null);
   const [hoveredProjectId, setHoveredProjectId] = useState(null);
@@ -200,9 +202,21 @@ const Portfolio = () => {
           </p>
         </div>
 
-        {/* View Mode Switcher Pills (Scrolltide Bookmark Cards vs Classic Grid) */}
+        {/* View Mode Switcher Pills (Fan Deck vs Bookmark Cards vs Classic Grid) */}
         <div className="flex justify-center mb-8">
           <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 shadow-inner">
+            <button
+              onClick={() => setViewMode("fandeck")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
+                viewMode === "fandeck"
+                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <RiPlayList2Fill className="text-base" />
+              <span>Fan Deck (Interactive)</span>
+            </button>
+
             <button
               onClick={() => setViewMode("bookmark")}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
@@ -212,7 +226,7 @@ const Portfolio = () => {
               }`}
             >
               <HiBookmark className="text-base" />
-              <span>Bookmark Cards (Scrolltide)</span>
+              <span>Bookmark Grid</span>
             </button>
 
             <button
@@ -247,7 +261,13 @@ const Portfolio = () => {
         </div>
 
         {/* Project Cards View */}
-        {viewMode === "bookmark" ? (
+        {viewMode === "fandeck" ? (
+          /* Scrolltide c-fan-deck Layout */
+          <FanDeckProjects
+            projects={filteredProjects}
+            onOpenProject={handleOpenProject}
+          />
+        ) : viewMode === "bookmark" ? (
           /* Scrolltide c-card-bookmark Layout */
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             <AnimatePresence>
