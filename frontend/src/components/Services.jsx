@@ -130,17 +130,6 @@ const Services = () => {
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
         <div className="text-center mb-10">
-          {/* Scrolltide Style Micro Capsule Pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-1.5 text-xs font-mono font-semibold text-yellow-500 dark:text-yellow-300 backdrop-blur-md mb-4 shadow-sm"
-          >
-            <span className="h-2 w-2 rounded-full bg-[#e2f952] animate-pulse shadow-sm shadow-[#e2f952]" />
-            <span className="tracking-widest uppercase">Scrolltide Fan Deck Interaction</span>
-            <span className="text-yellow-400">✦</span>
-          </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
