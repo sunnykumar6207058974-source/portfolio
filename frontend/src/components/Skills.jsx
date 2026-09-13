@@ -166,17 +166,6 @@ const Skills = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-10">
-          {/* Scrolltide Style Micro Capsule Pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400 backdrop-blur-md mb-4 shadow-sm"
-          >
-            <span className="h-2 w-2 rounded-full bg-[#e2f952] animate-pulse shadow-sm shadow-[#e2f952]" />
-            <span className="tracking-widest uppercase">Scrolltide Fan Deck & Card Bookmark</span>
-            <span className="text-cyan-500 dark:text-cyan-300">✦</span>
-          </motion.div>
 
           {/* Section Main Title */}
           <motion.h2
