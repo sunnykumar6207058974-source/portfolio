@@ -235,12 +235,14 @@ const Services = () => {
                     </span>
                   </div>
 
-                  <div className="h-44 w-full flex items-center justify-center my-3">
+                  {/* Service Visual Banner */}
+                  <div className="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-4 group-hover:border-yellow-400/50 transition-all duration-500 shadow-md">
                     <img
                       src={service.image}
                       alt={service.title}
-                      className="w-36 h-36 object-contain group-hover:scale-108 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
                   </div>
 
                   <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-yellow-400 transition">

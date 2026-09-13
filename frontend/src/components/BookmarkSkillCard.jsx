@@ -283,7 +283,7 @@ const BookmarkSkillCard = ({ skill, index }) => {
         </div>
 
         {/* Inner Artwork Window (Scrolltide Bloom & Dissolve Effect) */}
-        <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 aspect-[16/10.5] flex items-center justify-center p-2 mb-5 group/media shadow-inner">
+        <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 aspect-[16/10] flex items-center justify-center mb-5 group/media shadow-inner">
           {/* Background Ambient Radial Glow */}
           <div
             className="absolute inset-0 pointer-events-none transition-opacity duration-700 opacity-20 group-hover:opacity-100"
@@ -304,7 +304,7 @@ const BookmarkSkillCard = ({ skill, index }) => {
             alt={skill.title}
             loading="lazy"
             decoding="async"
-            className="relative z-10 w-full h-full object-contain transform transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 group-hover:contrast-115 group-hover:brightness-110"
+            className="relative z-10 w-full h-full object-cover transform transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-108 group-hover:contrast-115 group-hover:brightness-110"
           />
 
           {/* Saturated Dissolve Blend Layer */}
