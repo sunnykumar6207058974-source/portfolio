@@ -160,7 +160,7 @@ const Skills = () => {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-cyan-500/10 via-purple-500/10 to-transparent blur-3xl pointer-events-none -z-10 rounded-full" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/10 blur-3xl pointer-events-none -z-10 rounded-full" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1550px] mx-auto px-2 sm:px-6">
         {/* Header Section */}
         <div className="text-center mb-12">
           {/* Section Main Title */}
@@ -218,7 +218,7 @@ const Skills = () => {
         {/* Card Bookmark Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-9 items-stretch pt-2 pb-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch pt-2 pb-12"
         >
           {filteredSkills.map((skill, idx) => (
             <BookmarkSkillCard

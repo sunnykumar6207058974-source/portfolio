@@ -8,12 +8,12 @@ import { motion } from "framer-motion";
  */
 function generateBookmarkPath(w, h) {
   if (w <= 0 || h <= 0) return "";
-  const r = 24; // main outer corner radius
-  const stepH = 22; // top shoulder drop height
-  const stepW = Math.min(Math.round(w * 0.30), 110); // left shoulder width
-  const f = 13; // fillet transition radius
-  const biteH = 24; // bottom bite height
-  const biteW = Math.min(Math.round(w * 0.28), 105); // bottom bite width from right
+  const r = 22; // main outer corner radius
+  const stepH = 18; // top shoulder drop height
+  const stepW = Math.min(Math.round(w * 0.28), 125); // left shoulder width
+  const f = 11; // fillet transition radius
+  const biteH = 20; // bottom bite height
+  const biteW = Math.min(Math.round(w * 0.26), 115); // bottom bite width from right
   const pad = 1.5; // inner stroke boundary offset
 
   return [
@@ -261,11 +261,11 @@ const BookmarkSkillCard = ({ skill, index }) => {
 
       {/* Card Content Container (Clipped exactly to Bookmark shape) */}
       <div
-        className="relative z-10 p-5 sm:p-6 flex flex-col justify-between h-full"
+        className="relative z-10 p-4 sm:p-5 flex flex-col justify-between h-full"
         style={{ clipPath: `url(#${clipId})` }}
       >
         {/* Top Header Row in the Bookmark Tab */}
-        <div className="flex items-center justify-between pt-1 pb-3 mb-2">
+        <div className="flex items-center justify-between pt-0.5 pb-2 mb-1.5">
           {/* Left Stepped Shoulder Accent Label */}
           <div className="flex items-center gap-1.5">
             <span className={`w-2 h-2 rounded-full ${theme.dotMain} shadow-sm animate-pulse`} />
@@ -282,8 +282,8 @@ const BookmarkSkillCard = ({ skill, index }) => {
           </div>
         </div>
 
-        {/* Inner Artwork Window (Scrolltide Bloom & Dissolve Effect) */}
-        <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 aspect-[16/10] flex items-center justify-center mb-5 group/media shadow-inner">
+        {/* Inner Artwork Window (Scrolltide Bloom & Dissolve Effect) - SLEEK COMPACT BANNER */}
+        <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 h-36 sm:h-44 w-full flex items-center justify-center mb-3.5 group/media shadow-inner">
           {/* Background Ambient Radial Glow */}
           <div
             className="absolute inset-0 pointer-events-none transition-opacity duration-700 opacity-20 group-hover:opacity-100"
@@ -314,7 +314,7 @@ const BookmarkSkillCard = ({ skill, index }) => {
           />
 
           {/* Bottom Micro-Caption inside Artwork Frame */}
-          <div className="absolute inset-x-0 bottom-0 z-30 p-3 pt-6 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent">
+          <div className="absolute inset-x-0 bottom-0 z-30 p-2.5 pt-4 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent">
             <p className="text-[11px] sm:text-xs text-slate-300 font-medium tracking-wide line-clamp-1 group-hover:text-white transition-colors">
               {skill.tagline || skill.skills}
             </p>
@@ -325,17 +325,17 @@ const BookmarkSkillCard = ({ skill, index }) => {
         <div className="flex-1 flex flex-col justify-between">
           <div>
             {/* Main Skill Title */}
-            <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight mb-2 group-hover:text-cyan-300 transition-colors duration-300">
+            <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-1.5 group-hover:text-cyan-300 transition-colors duration-300">
               {skill.title}
             </h3>
 
             {/* Description / Summary */}
-            <p className="text-xs sm:text-sm text-slate-400 font-medium leading-relaxed mb-4 line-clamp-2">
+            <p className="text-xs sm:text-[13px] text-slate-400 font-medium leading-relaxed mb-3 line-clamp-1 sm:line-clamp-2">
               {skill.skills}
             </p>
 
             {/* Micro Tech Badges */}
-            <div className="flex flex-wrap gap-1.5 mb-5">
+            <div className="flex flex-wrap gap-1.5 mb-3">
               {tagsList.map((tag, tIdx) => (
                 <span
                   key={tIdx}
@@ -348,8 +348,8 @@ const BookmarkSkillCard = ({ skill, index }) => {
           </div>
 
           {/* Mastery Progress Bar */}
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-1.5 text-xs font-bold">
+          <div className="mb-2.5">
+            <div className="flex justify-between items-center mb-1 text-xs font-bold">
               <span className="text-slate-400 uppercase tracking-wider text-[10px] font-mono">
                 Mastery Level
               </span>
@@ -357,7 +357,7 @@ const BookmarkSkillCard = ({ skill, index }) => {
                 {skill.level || "90%"}
               </span>
             </div>
-            <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800 p-0.5">
+            <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800 p-0.5">
               <motion.div
                 initial={{ width: 0 }}
                 whileInView={{ width: skill.level || "90%" }}
@@ -370,9 +370,9 @@ const BookmarkSkillCard = ({ skill, index }) => {
         </div>
 
         {/* Bottom Lower Floor: Three Dots & Main Bold Callout */}
-        <div className="flex items-end justify-between pt-2">
+        <div className="flex items-end justify-between pt-1">
           {/* Bottom-left Three Signature Scrolltide Dots (•••) */}
-          <div className="flex items-center gap-1.5 pb-1">
+          <div className="flex items-center gap-1.5 pb-0.5">
             <span
               className={`w-2.5 h-2.5 rounded-full ${theme.dotMain} shadow-md transition-all duration-300 group-hover:scale-125`}
             />
@@ -384,9 +384,9 @@ const BookmarkSkillCard = ({ skill, index }) => {
             />
           </div>
 
-          {/* Large Bold Metric / Callout (e.g. 95% Mastery / Start Here.) */}
+          {/* Large Bold Metric / Callout */}
           <div className="text-right pr-2">
-            <span className="text-2xl sm:text-3xl font-black text-white font-mono tracking-tighter group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
+            <span className="text-xl sm:text-2xl font-black text-white font-mono tracking-tighter group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
               {skill.metric || skill.level}
             </span>
           </div>
