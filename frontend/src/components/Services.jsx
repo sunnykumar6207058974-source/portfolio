@@ -124,10 +124,9 @@ const Services = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-b from-purple-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none -z-10 rounded-full" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-amber-500/10 blur-3xl pointer-events-none -z-10 rounded-full" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1550px] mx-auto px-2 sm:px-6">
         {/* Section Heading */}
         <div className="text-center mb-10">
-
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -153,13 +152,13 @@ const Services = () => {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 pt-2 pb-12">
           {services.map((service) => (
             <div
               key={service.id}
-              className="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-yellow-400/60 dark:hover:border-yellow-400/60 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between p-6 sm:p-7 relative"
+              className="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-yellow-400/60 dark:hover:border-yellow-400/60 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between p-5 sm:p-6 relative"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-bold">
                   {service.slug}
                 </span>
@@ -168,8 +167,8 @@ const Services = () => {
                 </span>
               </div>
 
-              {/* Service Visual Banner */}
-              <div className="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-4 group-hover:border-yellow-400/50 transition-all duration-500 shadow-md">
+              {/* Service Visual Banner - Compact Sleek Aspect */}
+              <div className="relative w-full h-36 sm:h-44 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-3 group-hover:border-yellow-400/50 transition-all duration-500 shadow-md">
                 <img
                   src={service.image}
                   alt={service.title}
@@ -178,15 +177,15 @@ const Services = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
               </div>
 
-              <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-yellow-400 transition">
+              <h3 className="text-xl sm:text-2xl font-bold mb-1.5 text-slate-900 dark:text-white group-hover:text-yellow-400 transition">
                 {service.title}
               </h3>
 
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+              <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed mb-3.5 line-clamp-2">
                 {service.description}
               </p>
 
-              <div className="flex flex-wrap gap-1.5 mb-6">
+              <div className="flex flex-wrap gap-1.5 mb-4">
                 {service.deliverables.map((d, dIdx) => (
                   <span
                     key={dIdx}
@@ -200,7 +199,7 @@ const Services = () => {
 
               <Link
                 to="/contact"
-                className="w-full py-3 px-4 rounded-xl bg-[#e2f952] hover:bg-[#d8f53a] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#e2f952] hover:bg-[#d8f53a] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-md"
               >
                 <span>Request Service</span>
                 <HiArrowRight className="text-base" />
