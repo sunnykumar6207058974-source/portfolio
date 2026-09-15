@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { HiSparkles } from "react-icons/hi";
 import BookmarkSkillCard from "./BookmarkSkillCard";
 import { apiGetSkills } from "../services/api";
 
@@ -228,14 +227,6 @@ const Skills = () => {
             />
           ))}
         </motion.div>
-
-        {/* Footer Bottom Note */}
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
-            <HiSparkles className="text-[#e2f952]" />
-            <span>Interactive Bookmark Cards — Hover to inspect bloom & live mastery metrics</span>
-          </div>
-        </div>
       </div>
     </section>
   );
