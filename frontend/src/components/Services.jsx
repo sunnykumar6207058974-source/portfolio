@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { HiSparkles, HiArrowRight, HiViewGrid, HiCheckCircle } from "react-icons/hi";
-import { RiPlayList2Fill } from "react-icons/ri";
-import FanDeckServices from "./FanDeckServices";
+import { HiSparkles, HiArrowRight, HiCheckCircle } from "react-icons/hi";
 import { apiGetServices } from "../services/api";
 
 import webDevImg from "../assets/services/web_dev.png";
@@ -23,7 +21,7 @@ const defaultServices = [
     title: "Web Development",
     description:
       "Building fast, responsive, and modern websites using React.js, JavaScript, Tailwind CSS, and sub-second performance architectures.",
-    deliverables: ["React.js / Next.js", "Sub-second Loading", "Tailwind CSS", "SEO & Meta tags"],
+    deliverables: ["React / Next.js", "Sub-second Loading", "Tailwind CSS", "SEO & Meta tags"],
   },
   {
     id: 2,
@@ -50,41 +48,40 @@ const defaultServices = [
   {
     id: 4,
     image: ecommerceImg,
-    badge: "Shopping Platforms",
-    slug: "e-commerce",
+    badge: "E-Commerce",
+    slug: "shopping apps",
     themeKey: "amber",
-    title: "E-Commerce Solutions",
+    title: "E-Commerce Storefronts",
     description:
-      "Developing complete online stores with 3D product cards, cart checkout drawers, flash sale engines, and payment gateway integrations.",
-    deliverables: ["Checkout Drawer", "Payment Gateway", "Cart State", "Inventory Sync"],
+      "Engineering full-funnel digital shopping stores with cart drawers, product filtering, discount engines, and checkout systems.",
+    deliverables: ["Cart Checkout", "Product Grids", "Admin Analytics", "Inventory DB"],
   },
   {
     id: 5,
     image: uiUxImg,
-    badge: "UI/UX & Mobile First",
-    slug: "ui/ux design",
+    badge: "UI / UX Design",
+    slug: "design system",
     themeKey: "rose",
-    title: "Responsive Interface Design",
+    title: "UI / UX System Design",
     description:
-      "Designing glassmorphic, mobile-friendly user interfaces that deliver fluid user experiences across smartphone, tablet, and desktop viewports.",
-    deliverables: ["Figma to Code", "Mobile Responsive", "Micro-animations", "Glassmorphic UI"],
+      "Translating brand visions into interactive design prototypes, wireframes, accessible component kits, and dynamic user journeys.",
+    deliverables: ["Figma Systems", "Wireframing", "Dark Theme Kits", "Interaction Models"],
   },
   {
     id: 6,
     image: deploymentImg,
-    badge: "Cloud & DevOps",
+    badge: "DevOps & Cloud",
     slug: "cloud deploy",
     themeKey: "sky",
-    title: "Cloud Deployment & Support",
+    title: "Cloud Deployment & SEO",
     description:
-      "Deploying production-ready applications on Vercel, Netlify, and cloud servers with 99.99% uptime, CI/CD pipelines, and SEO optimization.",
-    deliverables: ["Vercel & Netlify", "Docker Containers", "CI/CD Workflows", "99.9% Uptime"],
+      "Production-ready deployment pipelines using Vercel, Netlify, Render, Docker, GitHub Actions, custom domains, and SSL.",
+    deliverables: ["Vercel & Render", "CI/CD Workflows", "SSL & Domains", "Lighthouse 95+"],
   },
 ];
 
 const Services = () => {
   const [services, setServices] = useState(defaultServices);
-  const [viewMode, setViewMode] = useState("fandeck"); // "fandeck" | "grid"
 
   const fetchServices = async () => {
     try {
@@ -151,127 +148,72 @@ const Services = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
           >
-            A hand of campaign cards splayed open from a bottom hinge — browse services with interactive 3D rotation and direct project requests.
+            Tailored engineering, full-stack web applications, scalable backend systems, and creative visual motion graphics.
           </motion.p>
-
-          {/* View Mode Switcher Pills (Fan Deck vs Full Grid) */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="mt-8 inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 shadow-inner"
-          >
-            <button
-              onClick={() => setViewMode("fandeck")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
-                viewMode === "fandeck"
-                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <RiPlayList2Fill className="text-base" />
-              <span>Fan Deck (Interactive)</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
-                viewMode === "grid"
-                  ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-md scale-102"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <HiViewGrid className="text-base" />
-              <span>Grid View</span>
-            </button>
-          </motion.div>
         </div>
 
-        {/* Dynamic View: Fan Deck vs Grid */}
-        <AnimatePresence mode="wait">
-          {viewMode === "fandeck" ? (
-            <motion.div
-              key="fandeck-view"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.4 }}
-              className="w-full flex justify-center"
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4 pb-12">
+          {services.map((service) => (
+            <div
+              key={service.id}
+              className="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-yellow-400/60 dark:hover:border-yellow-400/60 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between p-6 sm:p-7 relative"
             >
-              <FanDeckServices services={services} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="grid-view"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4 pb-12"
-            >
-              {services.map((service) => (
-                <div
-                  key={service.id}
-                  className="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-yellow-400/60 dark:hover:border-yellow-400/60 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between p-6 sm:p-7 relative"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-bold">
-                      {service.slug}
-                    </span>
-                    <span className="px-3 py-1 rounded-full text-xs font-mono font-bold border border-slate-700 bg-slate-900 text-yellow-400">
-                      {service.badge}
-                    </span>
-                  </div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-bold">
+                  {service.slug}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-mono font-bold border border-slate-700 bg-slate-900 text-yellow-400">
+                  {service.badge}
+                </span>
+              </div>
 
-                  {/* Service Visual Banner */}
-                  <div className="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-4 group-hover:border-yellow-400/50 transition-all duration-500 shadow-md">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
-                  </div>
+              {/* Service Visual Banner */}
+              <div className="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-4 group-hover:border-yellow-400/50 transition-all duration-500 shadow-md">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
+              </div>
 
-                  <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-yellow-400 transition">
-                    {service.title}
-                  </h3>
+              <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-yellow-400 transition">
+                {service.title}
+              </h3>
 
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
-                    {service.description}
-                  </p>
+              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                {service.description}
+              </p>
 
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {service.deliverables.map((d, dIdx) => (
-                      <span
-                        key={dIdx}
-                        className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300"
-                      >
-                        <HiCheckCircle className="text-emerald-500 text-xs shrink-0" />
-                        <span>{d}</span>
-                      </span>
-                    ))}
-                  </div>
-
-                  <Link
-                    to="/contact"
-                    className="w-full py-3 px-4 rounded-xl bg-[#e2f952] hover:bg-[#d8f53a] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                {service.deliverables.map((d, dIdx) => (
+                  <span
+                    key={dIdx}
+                    className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300"
                   >
-                    <span>Request Service</span>
-                    <HiArrowRight className="text-base" />
-                  </Link>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+                    <HiCheckCircle className="text-emerald-500 text-xs shrink-0" />
+                    <span>{d}</span>
+                  </span>
+                ))}
+              </div>
+
+              <Link
+                to="/contact"
+                className="w-full py-3 px-4 rounded-xl bg-[#e2f952] hover:bg-[#d8f53a] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition"
+              >
+                <span>Request Service</span>
+                <HiArrowRight className="text-base" />
+              </Link>
+            </div>
+          ))}
+        </div>
 
         {/* Section Footer Banner */}
         <div className="text-center pt-8 border-t border-slate-200 dark:border-slate-800/80 mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs font-mono text-slate-500 dark:text-slate-400 flex items-center gap-2">
             <HiSparkles className="text-[#e2f952]" />
-            <span>Click any card or use arrow keys/autoplay to fan through services</span>
+            <span>Custom architectures built for high availability, sub-second speeds & conversion</span>
           </p>
 
           <Link

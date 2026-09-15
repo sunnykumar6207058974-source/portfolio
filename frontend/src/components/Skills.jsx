@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { HiSparkles, HiViewGrid } from "react-icons/hi";
-import { RiPlayList2Fill } from "react-icons/ri";
+import { motion } from "framer-motion";
+import { HiSparkles } from "react-icons/hi";
 import BookmarkSkillCard from "./BookmarkSkillCard";
-import FanDeckSkills from "./FanDeckSkills";
 import { apiGetSkills } from "../services/api";
 
 import frontendSkillImg from "../assets/skills/frontend.png";
@@ -112,7 +110,6 @@ const categoryFilters = [
 const Skills = () => {
   const [skills, setSkills] = useState(defaultSkills);
   const [activeCategory, setActiveCategory] = useState("All");
-  const [viewMode, setViewMode] = useState("fandeck"); // "fandeck" | "bookmark"
 
   const fetchSkills = async () => {
     try {
@@ -165,8 +162,7 @@ const Skills = () => {
 
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-10">
-
+        <div className="text-center mb-12">
           {/* Section Main Title */}
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
@@ -189,108 +185,55 @@ const Skills = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
           >
-            Interactive splayed campaign cards with bottom hinge rotation and bookmark silhouettes — exploring full-stack engineering, databases, and creative media.
+            Explore core technical capabilities across full-stack engineering, scalable backend architecture, database systems, and creative media.
           </motion.p>
 
-          {/* View Mode Switcher Pills (Fan Deck vs Card Bookmark Grid) */}
+          {/* Filter Pills */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="mt-8 inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-200/80 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 shadow-inner"
+            className="mt-8 flex flex-wrap items-center justify-center gap-2"
           >
-            <button
-              onClick={() => setViewMode("fandeck")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
-                viewMode === "fandeck"
-                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <RiPlayList2Fill className="text-base" />
-              <span>Fan Deck (Interactive)</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode("bookmark")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
-                viewMode === "bookmark"
-                  ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-md scale-102"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <HiViewGrid className="text-base" />
-              <span>Bookmark Grid</span>
-            </button>
+            {categoryFilters.map((cat) => {
+              const isActive = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer border ${
+                    isActive
+                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-cyan-400 dark:border-white shadow-lg shadow-cyan-500/20 scale-105"
+                      : "bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </motion.div>
-
-          {/* Filter Pills (Shown in Bookmark Grid Mode) */}
-          {viewMode === "bookmark" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-6 flex flex-wrap items-center justify-center gap-2"
-            >
-              {categoryFilters.map((cat) => {
-                const isActive = activeCategory === cat;
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer border ${
-                      isActive
-                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-cyan-400 dark:border-white shadow-lg shadow-cyan-500/20 scale-105"
-                        : "bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
-            </motion.div>
-          )}
         </div>
 
-        {/* Dynamic Display: Fan Deck vs Card Bookmark Grid */}
-        <AnimatePresence mode="wait">
-          {viewMode === "fandeck" ? (
-            <motion.div
-              key="fandeck-skills-view"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.4 }}
-              className="w-full flex justify-center"
-            >
-              <FanDeckSkills skills={skills} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="bookmark-skills-view"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-9 items-stretch pt-2 pb-12"
-            >
-              {filteredSkills.map((skill, idx) => (
-                <BookmarkSkillCard
-                  key={skill.id || idx}
-                  skill={skill}
-                  index={idx}
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Card Bookmark Grid */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-9 items-stretch pt-2 pb-12"
+        >
+          {filteredSkills.map((skill, idx) => (
+            <BookmarkSkillCard
+              key={skill.id || idx}
+              skill={skill}
+              index={idx}
+            />
+          ))}
+        </motion.div>
 
         {/* Footer Bottom Note */}
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono">
             <HiSparkles className="text-[#e2f952]" />
-            <span>Use arrow buttons or toggle view modes to explore technologies</span>
+            <span>Interactive Bookmark Cards — Hover to inspect bloom & live mastery metrics</span>
           </div>
         </div>
       </div>
