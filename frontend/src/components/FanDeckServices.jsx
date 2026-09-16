@@ -274,7 +274,7 @@ const FanDeckServices = ({ services = [] }) => {
                 {isActive ? (
                   <Link
                     to="/contact"
-                    className="w-full py-3 px-5 rounded-2xl bg-[#e2f952] hover:bg-[#d8f53a] text-slate-950 font-black text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#e2f952]/20 hover:scale-[1.02] active:scale-98 cursor-pointer uppercase tracking-wider"
+                    className="w-full py-3 px-5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:scale-[1.02] active:scale-98 cursor-pointer uppercase tracking-wider"
                   >
                     <span>Request Service</span>
                     <HiArrowRight className="text-base" />

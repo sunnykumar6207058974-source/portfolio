@@ -199,7 +199,7 @@ const Services = () => {
 
               <Link
                 to="/contact"
-                className="w-full py-2.5 px-4 rounded-xl bg-[#e2f952] hover:bg-[#d8f53a] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-md"
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-md shadow-blue-500/20 active:scale-[0.98]"
               >
                 <span>Request Service</span>
                 <HiArrowRight className="text-base" />
