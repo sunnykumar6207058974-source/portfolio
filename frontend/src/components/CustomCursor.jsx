@@ -23,35 +23,34 @@ const CustomCursor = () => {
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    window.addEventListener("mousemove", handleMouseMove);
+    // Track interactive hover state using efficient event delegation (zero DOM overhead)
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (
+        target &&
+        target.closest &&
+        target.closest("a, button, input, textarea, select, [role='button'], .cursor-pointer")
+      ) {
+        setIsHovered(true);
+      } else {
+        setIsHovered(false);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Track interactive hover state for buttons, links, inputs, and clickable elements
-    const handleElementHover = () => {
-      const interactiveElements = document.querySelectorAll(
-        "a, button, input, textarea, select, [role='button'], .cursor-pointer"
-      );
-
-      interactiveElements.forEach((el) => {
-        el.addEventListener("mouseenter", () => setIsHovered(true));
-        el.addEventListener("mouseleave", () => setIsHovered(false));
-      });
-    };
-
-    handleElementHover();
-    const observer = new MutationObserver(handleElementHover);
-    observer.observe(document.body, { childList: true, subtree: true });
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
-      observer.disconnect();
     };
   }, [isVisible]);
 
