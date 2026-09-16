@@ -5,7 +5,6 @@ import {
   HiPlay,
   HiExternalLink,
   HiCode,
-  HiSparkles,
   HiBookmark,
   HiViewGrid,
 } from "react-icons/hi";
@@ -186,8 +185,7 @@ const Portfolio = () => {
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
         <div className="text-center mb-12">
-          <p className="text-cyan-600 dark:text-cyan-400 text-lg font-semibold flex items-center justify-center gap-2">
-            <HiSparkles className="text-xl" />
+          <p className="text-cyan-600 dark:text-cyan-400 text-lg font-semibold">
             My Projects
           </p>
 
