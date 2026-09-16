@@ -156,7 +156,7 @@ const Services = () => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-yellow-400/60 dark:hover:border-yellow-400/60 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between p-5 sm:p-6 relative"
+              className="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all duration-300 shadow-xl dark:shadow-none flex flex-col justify-between p-5 sm:p-6 relative"
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="font-mono text-xs uppercase tracking-wider text-slate-400 font-bold">
@@ -168,7 +168,7 @@ const Services = () => {
               </div>
 
               {/* Service Visual Banner - Compact Sleek Aspect */}
-              <div className="relative w-full h-36 sm:h-44 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-3 group-hover:border-yellow-400/50 transition-all duration-500 shadow-md">
+              <div className="relative w-full h-36 sm:h-44 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800/80 my-3 group-hover:border-emerald-500/50 transition-all duration-500 shadow-md">
                 <img
                   src={service.image}
                   alt={service.title}
@@ -177,7 +177,7 @@ const Services = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-bold mb-1.5 text-slate-900 dark:text-white group-hover:text-yellow-400 transition">
+              <h3 className="text-xl sm:text-2xl font-bold mb-1.5 text-slate-900 dark:text-white group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition">
                 {service.title}
               </h3>
 

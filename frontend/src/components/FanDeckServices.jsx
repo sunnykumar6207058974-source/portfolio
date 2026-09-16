@@ -239,7 +239,7 @@ const FanDeckServices = ({ services = [] }) => {
                 </div>
 
                 {/* Service Main Title */}
-                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-2 line-clamp-1">
+                <h3 className="text-xl sm:text-2xl font-black text-white hover:text-emerald-400 transition tracking-tight mt-2 line-clamp-1">
                   {service.title}
                 </h3>
 
