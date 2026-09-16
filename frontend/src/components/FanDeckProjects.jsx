@@ -302,13 +302,13 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
               <div className="relative z-10 pt-2">
                 {isActive ? (
                   <div className="flex items-center gap-2">
-                    {/* Acid-Yellow Plate (Signature Scrolltide Fan Deck Element) */}
+                    {/* Live Demo Action Button */}
                     <a
                       href={project.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="flex-1 py-2.5 px-3 rounded-xl bg-[#e2f952] hover:bg-[#d4ed35] text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md transform active:scale-98"
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md shadow-blue-500/25 transform active:scale-98"
                     >
                       <HiExternalLink className="text-sm" />
                       <span>Live Demo</span>
@@ -370,7 +370,7 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
             aria-label={isPlaying ? "Pause Auto-play" : "Play Auto-play"}
             className={`h-10 sm:h-11 px-4 rounded-full border text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-lg cursor-pointer ${
               isPlaying
-                ? "bg-[#e2f952]/20 border-[#e2f952]/50 text-[#e2f952]"
+                ? "bg-blue-600 border-blue-500 text-white shadow-blue-500/30"
                 : "bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white"
             }`}
           >
@@ -380,7 +380,7 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
 
           {/* Pagination Pill */}
           <div className="px-4 py-2.5 rounded-full bg-slate-900/95 border border-slate-800 text-slate-200 font-mono text-xs sm:text-sm font-black shadow-inner tracking-wider">
-            <span className="text-[#e2f952]">{activeIndex + 1}</span>
+            <span className="text-blue-400">{activeIndex + 1}</span>
             <span className="text-slate-500 mx-1.5">/</span>
             <span>{total}</span>
           </div>
@@ -389,7 +389,7 @@ const FanDeckProjects = ({ projects = [], onOpenProject }) => {
           <button
             onClick={handleNext}
             aria-label="Next Project"
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#e2f952] text-slate-950 font-bold border border-white hover:border-[#e2f952] flex items-center justify-center transition-all shadow-lg active:scale-95 cursor-pointer"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-blue-600 hover:text-white text-slate-950 font-bold border border-white hover:border-blue-600 flex items-center justify-center transition-all shadow-lg active:scale-95 cursor-pointer"
           >
             <HiChevronRight className="text-xl" />
           </button>

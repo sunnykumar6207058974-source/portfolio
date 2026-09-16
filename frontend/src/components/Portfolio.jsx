@@ -207,7 +207,7 @@ const Portfolio = () => {
               onClick={() => setViewMode("fandeck")}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
                 viewMode === "fandeck"
-                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/30 scale-102"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -219,7 +219,7 @@ const Portfolio = () => {
               onClick={() => setViewMode("bookmark")}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
                 viewMode === "bookmark"
-                  ? "bg-[#e2f952] text-slate-950 shadow-md scale-102"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/30 scale-102"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -365,7 +365,7 @@ const Portfolio = () => {
                         href={project.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-2.5 px-3.5 rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20"
+                        className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-3.5 rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/25"
                         title="Open Live Project"
                       >
                         <HiExternalLink className="text-base" />
@@ -497,7 +497,7 @@ const Portfolio = () => {
                         href={selectedProject.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 sm:flex-initial bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 transition shadow-md shadow-cyan-500/20"
+                        className="flex-1 sm:flex-initial bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 transition shadow-md shadow-blue-500/25"
                       >
                         <HiExternalLink className="text-lg" />
                         Live Demo
