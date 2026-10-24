@@ -227,7 +227,7 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-transparent text-slate-900 dark:text-white transition-colors duration-300 flex items-center justify-center overflow-hidden"
     >
       {/* Hardware-accelerated ambient background glow (Zero blur filter CPU/GPU cost) */}
       <div

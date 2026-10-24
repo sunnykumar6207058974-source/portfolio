@@ -32,7 +32,7 @@ const About = () => {
   return (
     <section
       id="about"
-      className="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white py-20 px-6 transition-colors duration-300"
+      className="min-h-screen bg-slate-100/50 dark:bg-slate-950/40 backdrop-blur-xs text-slate-900 dark:text-white py-20 px-6 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
         {/* Heading */}

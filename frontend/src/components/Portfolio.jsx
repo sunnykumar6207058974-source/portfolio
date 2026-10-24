@@ -180,7 +180,7 @@ const Portfolio = () => {
   return (
     <section
       id="portfolio"
-      className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white px-4 sm:px-6 py-20 transition-colors duration-300"
+      className="min-h-screen bg-transparent text-slate-900 dark:text-white px-4 sm:px-6 py-20 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}

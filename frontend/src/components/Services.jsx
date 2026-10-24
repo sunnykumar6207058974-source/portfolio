@@ -118,7 +118,7 @@ const Services = () => {
   return (
     <section
       id="services"
-      className="relative min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-white px-4 sm:px-6 lg:px-8 py-24 transition-colors duration-300 overflow-hidden"
+      className="relative min-h-screen bg-slate-100/50 dark:bg-slate-950/40 backdrop-blur-xs text-slate-900 dark:text-white px-4 sm:px-6 lg:px-8 py-24 transition-colors duration-300 overflow-hidden"
     >
       {/* Background Decorative Gradient Meshes */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-b from-purple-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none -z-10 rounded-full" />

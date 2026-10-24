@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import LoadingScreen from "./components/LoadingScreen";
 import CustomCursor from "./components/CustomCursor";
-import ParticleBackground from "./components/ParticleBackground";
+import GauzeBlaze from "./components/GauzeBlaze";
 import ScrollProgressBar from "./components/ScrollProgressBar";
 import ScrollToTop from "./components/ScrollToTop";
 import Navbar from "./components/Navbar";
@@ -47,9 +47,9 @@ function App() {
         <Router>
           <ScrollToTop />
           <CustomCursor />
-          <div className="relative bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300 overflow-x-hidden min-h-screen">
+          <div className="relative bg-slate-50 dark:bg-[#030207] text-slate-900 dark:text-white transition-colors duration-300 overflow-x-hidden min-h-screen">
             <ScrollProgressBar />
-            <ParticleBackground />
+            <GauzeBlaze />
             <div className="relative z-10">
               <Navbar />
               <main id="main-content">

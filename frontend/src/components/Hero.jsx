@@ -1,3 +1,4 @@
+import TornadoBackground from "./TornadoBackground";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
@@ -19,8 +20,15 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex items-center pt-20 sm:pt-24 pb-12 overflow-hidden transition-colors duration-300"
+      className="relative min-h-screen bg-transparent text-slate-900 dark:text-white flex items-center pt-20 sm:pt-24 pb-12 overflow-hidden transition-colors duration-300"
     >
+      {/* ── OriginKit Tornado Background (Preset: Variant 2) ── */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <TornadoBackground
+          background="transparent"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
       {/* Background Decorative Glows */}
       <div className="absolute top-1/4 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
